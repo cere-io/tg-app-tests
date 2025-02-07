@@ -1,0 +1,21 @@
+{
+  "name": "rob",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha tests/**/*.js"
+  },
+  "devDependencies": {
+    "chai": "^5.1.2",
+    "chromedriver": "^133.0.0",
+    "mocha": "^10.8.2",
+    "selenium-webdriver": "^4.28.1"
+  }
+}
