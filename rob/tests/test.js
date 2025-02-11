@@ -76,7 +76,7 @@ describe("Create new template", async function () {
     await driver.findElement(By.id("menu-WidgetTemplate")).click();
     await driver
       .findElement(
-        By.css(".Component-root-6 > .MuiButtonBase-root > .MuiButton-label") //doesn't work, need to add id for this button
+        By.id("add_new_template") //doesn't work, need to add id for this button
       )
       .click();
 
@@ -129,7 +129,7 @@ describe("Create new template", async function () {
       .findElement(By.className(" CodeMirror-line "))
       .sendKeys(htmlRaw);
 
-    await driver.findElement(By.className("MuiTouchRipple-root")).click();
+    await driver.findElement(By.className("create_new")).click(); //doesn't work, need to add id for this button
 
     // add here check that template was created
     // add delete created template
@@ -178,7 +178,6 @@ describe("Create new event trigger", async function () {
   });
 });
 
-// TBD
 describe("Create new engagement", async function () {
   let driver;
   this.timeout(20000);
@@ -200,7 +199,54 @@ describe("Create new engagement", async function () {
     expect(welcomeMessage).to.equal(`Hello ${userName}`);
 
     await driver.findElement(By.id("menu-engagement")).click();
-    await driver.findElement(By.className("button_left")).click();
+    await driver.findElement(By.id("add_new_engagement")).click();
+
+    const engagementName = "autotests engagement";
+
+    await driver.findElement(By.id("name")).sendKeys(engagementName); //doesn't work, need to add id for this button
+    await driver
+      .findElement(By.id("mui-component-select-campaign"))
+      .sendKeys("Autotests campaign");
+    await driver
+      .findElement(By.id("mui-component-select-selectedApps"))
+      .sendKeys("Veronicas test app");
+    await driver
+      .findElement(By.id("mui-component-select-template"))
+      .sendKeys("AUTOTESTS_TEMPLATE");
+    await driver.findElement(By.name("enabled")).click();
+
+    await driver.findElement(By.id("app_event_triggers")).click(); //doesn't work, need to add id for this button
+    await driver.findElement(By.id("add_trigger")).click(); //doesn't work, need to add id for this button
+    const triggerPopUp = await driver
+      .findElement(By.id("trigger_pop_up"))
+      .getText();
+    expect(triggerPopUp).to.equal("Define event triggers"); //doesn't work, need to add id for this button
+    await driver
+      .findElement(By.id("mui-component-select-eventTrigger"))
+      .sendKeys("autotests_trigger");
+    await driver.findElement(By.id("save_trigger_changes")).click(); //doesn't work, need to add id for this button
+
+    await driver.findElement(By.id("targeting")).click(); //doesn't work, need to add id for this button
+    await driver.findElement(By.id("configure_targeting")).click(); //doesn't work, need to add id for this button
+    await driver.findElement(By.id("select_targeting")).click(); //doesn't work, need to add id for this button
+    await driver
+      .findElement(
+        By.xpath(
+          "/html/body/div[5]/div[3]/div/div[2]/div/div/ul/div[1]/span/span[1]/svg/path"
+        )
+      )
+      .click();
+    await driver.findElement(By.id("ok_target")).click(); //doesn't work, need to add id for this button
+    await driver.findElement(By.id("cross_target")).click(); //doesn't work, need to add id for this button
+    const activeTargeting = await driver.findElement(By.id("active")).getText(); //doesn't work, need to add id for this button
+    expect(activeTargeting).to.equal("active");
+
+    await driver.findElement(By.id("integration_scripts")).click(); //doesn't work, need to add id for this button
+    await driver.findElement(By.id("select_script")).click(); //doesn't work, need to add id for this button
+    await driver.findElement(By.name("scripts.id-15-3")).click();
+    await driver.findElement(By.id("save_script")).click(); //doesn't work, need to add id for this button
+
+    await driver.findElement(By.id("save_and_exit")).click(); //doesn't work, need to add id for this button
 
     // add here check that engagement was created
     // add here delete engagement
