@@ -255,3 +255,76 @@ describe("Create new engagement", async function () {
     await driver.quit();
   });
 });
+
+describe("Create new campaign negative case", async function () {
+  let driver;
+  this.timeout(20000);
+  before(async function () {
+    driver = await new Builder().forBrowser("chrome").build();
+  });
+  it("should show an error", async function () {
+    this.timeout(20000);
+    const userName = "veronica";
+    const userPassword = "Test12345!";
+    await driver.get("https://rob.stage.cere.io/EE/admin/login.php");
+    await driver.findElement(By.name("login")).sendKeys(userName);
+    await driver.findElement(By.name("password")).sendKeys(userPassword);
+    await driver.findElement(By.id("adminLoginFormSubmit")).click();
+
+    const welcomeMessage = await driver
+      .findElement(By.id("username"))
+      .getText();
+    expect(welcomeMessage).to.equal(`Hello ${userName}`);
+
+    await driver.findElement(By.id("menu-campaign")).click();
+    await driver.findElement(By.id("create-campaign")).click();
+    await driver.findElement(By.id("appCreateButton")).click();
+
+    const errorMessage = await driver
+      .findElement(By.className("error"))
+      .getText();
+    expect(errorMessage).to.equal("This field is required.");
+
+    // add here check that campaign was created
+    // add archive created campaign
+  });
+  after(async function () {
+    await driver.quit();
+  });
+});
+
+describe("Create new event trigger negative case", async function () {
+  let driver;
+  this.timeout(20000);
+  before(async function () {
+    driver = await new Builder().forBrowser("chrome").build();
+  });
+  it("should show an error", async function () {
+    this.timeout(20000);
+    const userName = "veronica";
+    const userPassword = "Test12345!";
+    await driver.get("https://rob.stage.cere.io/EE/admin/login.php");
+    await driver.findElement(By.name("login")).sendKeys(userName);
+    await driver.findElement(By.name("password")).sendKeys(userPassword);
+    await driver.findElement(By.id("adminLoginFormSubmit")).click();
+
+    const welcomeMessage = await driver
+      .findElement(By.id("username"))
+      .getText();
+    expect(welcomeMessage).to.equal(`Hello ${userName}`);
+
+    await driver.findElement(By.id("menu-placement")).click();
+    await driver.findElement(By.id("create-placement")).click();
+    await driver.findElement(By.id("submit")).click();
+
+    const errorMessage = await driver
+      .findElement(By.className("error"))
+      .getText();
+    expect(errorMessage).to.equal("This field is required.");
+    // add here check that trigger was created
+    // add here delete trigger
+  });
+  after(async function () {
+    await driver.quit();
+  });
+});

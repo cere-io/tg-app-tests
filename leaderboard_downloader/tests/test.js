@@ -49,3 +49,44 @@ describe("Download csv file for existing campaign", async function () {
     await driver.quit();
   });
 });
+
+describe("Download csv file for NOT existing campaign", async function () {
+  let driver;
+  this.timeout(20000);
+  before(async function () {
+    driver = await new Builder().forBrowser("chrome").build();
+  });
+  it("should show an error", async function () {
+    this.timeout(20000);
+    const email = "veronika.filipenko@cere.io";
+    const otpCode = "555555";
+    await driver.get(
+      "https://cdn.ddcdragon.com/81/leaderboard-downloader-stage/"
+    );
+
+    await driver.findElement(By.css("button")).click();
+    await driver.findElement(By.id("sign_in")).click();
+    await driver.findElement(By.name("email")).sendKeys(email);
+    await driver.findElement(By.id(":r5:")).click();
+    await driver.findElement(By.id("otp")).sendKeys(otpCode);
+    await driver.findElement(By.id(":r7:")).click();
+    await driver.findElement(By.id(":r8:")).click();
+
+    const welcomeMessage = await driver.findElement(By.css("h4")).getText();
+    expect(welcomeMessage).to.equal("Please, enter campaign id");
+
+    const campaignId = "105";
+    await driver.findElement(By.css("input")).sendKeys(campaignId);
+
+    let downloadButton = await driver.findElement(By.css("button"));
+    downloadButton.click();
+
+    const errorMessage = await driver
+      .findElement(By.className("error_text"))
+      .getText();
+    expect(errorMessage).to.equal("Please, enter valid campaign id");
+  });
+  after(async function () {
+    await driver.quit();
+  });
+});
