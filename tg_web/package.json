@@ -1,0 +1,22 @@
+{
+  "name": "tg_web",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha tests/**/*.js"
+  },
+  "devDependencies": {
+    "chai": "^5.2.0",
+    "chromedriver": "^133.0.1",
+    "mocha": "^10.8.2",
+    "prettier": "^3.5.1",
+    "selenium-webdriver": "^4.28.1"
+  }
+}
