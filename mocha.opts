@@ -1,2 +1,0 @@
---reporter mochawesome
---reporter-options reportDir=mochawesome-report,reportFilename=index,quiet=true
