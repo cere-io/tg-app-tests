@@ -1,0 +1,99 @@
+version: '3.8'
+
+services:
+  vpn-us:
+    image: dperson/openvpn-client
+    container_name: vpn-us-proxy
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - OPENVPN_OPTS=--config /vpn/us-free-42.protonvpn.udp.ovpn --auth-user-pass /vpn/auth.txt
+      - VPN_USER=1frkNHLRlKWDCczR
+      - VPN_PASS=dNRqImPaFt0v0tOeoHp0tyzH5OX7kDxK
+    volumes:
+      - ./vpn-config:/vpn
+      - /etc/localtime:/etc/localtime:ro
+    entrypoint: ["/vpn/entrypoint.sh"]
+    restart: unless-stopped
+    privileged: true
+    networks:
+      - proxy-net
+
+  vpn-nl:
+    image: dperson/openvpn-client
+    container_name: vpn-nl-proxy
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - OPENVPN_OPTS=--config /vpn/nl-free-12.protonvpn.udp.ovpn --auth-user-pass /vpn/auth.txt
+      - VPN_USER=1frkNHLRlKWDCczR
+      - VPN_PASS=dNRqImPaFt0v0tOeoHp0tyzH5OX7kDxK
+    volumes:
+      - ./vpn-config:/vpn
+      - /etc/localtime:/etc/localtime:ro
+    entrypoint: ["/vpn/entrypoint.sh"]
+    restart: unless-stopped
+    privileged: true
+    networks:
+      - proxy-net
+
+  vpn-jp:
+    image: dperson/openvpn-client
+    container_name: vpn-jp-proxy
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - OPENVPN_OPTS=--config /vpn/jp-free-8.protonvpn.udp.ovpn --auth-user-pass /vpn/auth.txt
+      - VPN_USER=1frkNHLRlKWDCczR
+      - VPN_PASS=dNRqImPaFt0v0tOeoHp0tyzH5OX7kDxK
+    volumes:
+      - ./vpn-config:/vpn
+      - /etc/localtime:/etc/localtime:ro
+    entrypoint: ["/vpn/entrypoint.sh"]
+    restart: unless-stopped
+    privileged: true
+    networks:
+      - proxy-net
+
+  proxy-us:
+    image: serjs/go-socks5-proxy
+    container_name: socks5-proxy-us
+    depends_on:
+      - vpn-us
+    environment:
+      - SOCKS5_PORT=1080
+    restart: unless-stopped
+    ports:
+      - "1080:1080"
+    networks:
+      - proxy-net
+
+  proxy-nl:
+    image: serjs/go-socks5-proxy
+    container_name: socks5-proxy-nl
+    depends_on:
+      - vpn-nl
+    environment:
+      - SOCKS5_PORT=1081
+    restart: unless-stopped
+    ports:
+      - "1081:1080"
+    networks:
+      - proxy-net
+
+  proxy-jp:
+    image: serjs/go-socks5-proxy
+    container_name: socks5-proxy-jp
+    depends_on:
+      - vpn-jp
+    environment:
+      - SOCKS5_PORT=1082
+    restart: unless-stopped
+    ports:
+      - "1082:1080"
+    networks:
+      - proxy-net
+
+networks:
+  proxy-net:
+    driver: bridge
