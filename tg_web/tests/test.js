@@ -9,18 +9,23 @@ describe("Open active quests screen", async function () {
     driver = await new Builder().forBrowser("chrome").build();
   });
   it("should show active quests screen", async function () {
-    this.timeout(20000);
-    const userName = "veronika.filipenko@cere.io";
+    const randomNumber = Math.floor(Math.random() * 100000);
+    const userName = `veronika.filipenko+${randomNumber}@cere.io`;
     const otp = "555555";
     await driver.get(
       "https://telegram-viewer-app.stage.cere.io/?campaignId=114"
     );
 
+    const welcomeTitle = await driver
+      .findElement(By.className("hero-title"))
+      .getText();
+    expect(welcomeTitle).to.equal("Sit back, Enjoy, and Earn!");
+
     await driver.findElement(By.className("tgui-bca5056bf34297b0")).click();
     await driver.findElement(By.className("welcom-cta-text")).click();
 
     await driver.findElement(By.id("sign_in")).click();
-    await driver.findElement(By.name("login")).sendKeys(userName);
+    await driver.findElement(By.name("email")).sendKeys(userName);
     await driver.findElement(By.id(":r1:")).click();
     await driver.findElement(By.id("otp")).sendKeys(otp);
     await driver.findElement(By.id(":r3:")).click();
@@ -40,6 +45,57 @@ describe("Open active quests screen", async function () {
   });
 });
 
+describe.only("Answer on quiz questions", async function () {
+  let driver;
+  this.timeout(20000);
+  before(async function () {
+    driver = await new Builder().forBrowser("chrome").build();
+  });
+  it("should answer on quiz questions", async function () {
+    const randomNumber = Math.floor(Math.random() * 100000);
+    const userName = `veronika.filipenko+${randomNumber}@cere.io`;
+    const otp = "555555";
+    await driver.get(
+      "https://telegram-viewer-app.stage.cere.io/?campaignId=120"
+    );
+
+    const welcomeTitle = await driver
+      .findElement(By.className("hero-title"))
+      .getText();
+    expect(welcomeTitle).to.equal("Sit back, Enjoy, and Earn!");
+
+    await driver.findElement(By.className("tgui-bca5056bf34297b0")).click();
+    await driver.findElement(By.className("welcom-cta-text")).click();
+
+    await driver.findElement(By.id("sign_in")).click();
+    await driver.findElement(By.name("email")).sendKeys(userName);
+    await driver.findElement(By.id(":r7:")).click();
+    await driver.findElement(By.className("css-6f6728")).sendKeys(otp);
+    await driver.findElement(By.id(":r3:")).click();
+
+    const questTitle = await driver
+      .findElement(By.className("t1uqjrzu"))
+      .getText();
+    expect(questTitle).to.equal("Complete Quests to Earn!");
+
+    const questTab = await driver
+      .findElement(By.className("tgui-e6658d0b8927f95e"))
+      .getText();
+    expect(questTab).to.equal("Active Quests");
+
+    const quizTitle = await driver
+      .findElement(
+        By.xpath("/html/body/div/main/div/div[2]/div/div[5]/div/div/div[1]/h2")
+      )
+      .getText();
+    expect(quizTitle).to.equal("Crypto Knowledge Check");
+  });
+
+  after(async function () {
+    await driver.quit();
+  });
+});
+
 describe("Open leaderboard screen", async function () {
   let driver;
   this.timeout(20000);
@@ -47,8 +103,8 @@ describe("Open leaderboard screen", async function () {
     driver = await new Builder().forBrowser("chrome").build();
   });
   it("should show leaderboard screen", async function () {
-    this.timeout(20000);
-    const userName = "veronika.filipenko@cere.io";
+    const randomNumber = Math.floor(Math.random() * 100000);
+    const userName = `veronika.filipenko+${randomNumber}@cere.io`;
     const otp = "555555";
     await driver.get(
       "https://telegram-viewer-app.stage.cere.io/?campaignId=114"
@@ -58,7 +114,7 @@ describe("Open leaderboard screen", async function () {
     await driver.findElement(By.className("welcom-cta-text")).click();
 
     await driver.findElement(By.id("sign_in")).click();
-    await driver.findElement(By.name("login")).sendKeys(userName);
+    await driver.findElement(By.name("email")).sendKeys(userName);
     await driver.findElement(By.id(":r1:")).click();
     await driver.findElement(By.id("otp")).sendKeys(otp);
     await driver.findElement(By.id(":r3:")).click();
@@ -103,8 +159,8 @@ describe("Open library screen", async function () {
     driver = await new Builder().forBrowser("chrome").build();
   });
   it("should show library screen", async function () {
-    this.timeout(20000);
-    const userName = "veronika.filipenko@cere.io";
+    const randomNumber = Math.floor(Math.random() * 100000);
+    const userName = `veronika.filipenko+${randomNumber}@cere.io`;
     const otp = "555555";
     await driver.get(
       "https://telegram-viewer-app.stage.cere.io/?campaignId=114"
@@ -114,7 +170,7 @@ describe("Open library screen", async function () {
     await driver.findElement(By.className("welcom-cta-text")).click();
 
     await driver.findElement(By.id("sign_in")).click();
-    await driver.findElement(By.name("login")).sendKeys(userName);
+    await driver.findElement(By.name("email")).sendKeys(userName);
     await driver.findElement(By.id(":r1:")).click();
     await driver.findElement(By.id("otp")).sendKeys(otp);
     await driver.findElement(By.id(":r3:")).click();

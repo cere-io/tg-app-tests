@@ -4,7 +4,7 @@
   "description": "",
   "license": "ISC",
   "author": "",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
   "directories": {
     "test": "tests"
@@ -14,9 +14,9 @@
   },
   "devDependencies": {
     "chai": "^5.2.0",
-    "chromedriver": "^133.0.1",
-    "mocha": "^10.8.2",
+    "chromedriver": "^134.0.1",
+    "mocha": "^11.1.0",
     "prettier": "^3.5.1",
-    "selenium-webdriver": "^4.28.1"
+    "selenium-webdriver": "^4.29.0"
   }
 }
