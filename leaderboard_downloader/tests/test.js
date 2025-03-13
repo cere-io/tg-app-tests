@@ -10,8 +10,8 @@ describe("Download csv file for existing campaign", async function () {
   });
   it("should download csv file", async function () {
     this.timeout(20000);
-    const email = "veronika.filipenko@cere.io";
-    const otpCode = "555555";
+    const userName = "veronika.filipenko@cere.io";
+    const otp = "555555";
     await driver.get(
       "https://cdn.ddcdragon.com/81/leaderboard-downloader-stage/"
     );
@@ -98,8 +98,8 @@ describe("Download csv file for NOT existing campaign", async function () {
   });
   it("should show an error", async function () {
     this.timeout(20000);
-    const email = "veronika.filipenko@cere.io";
-    const otpCode = "555555";
+    const userName = "veronika.filipenko@cere.io";
+    const otp = "555555";
     await driver.get(
       "https://cdn.ddcdragon.com/81/leaderboard-downloader-stage/"
     );
