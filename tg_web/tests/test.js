@@ -1,21 +1,25 @@
 import { expect } from "chai";
-import { Builder, By } from "selenium-webdriver";
+import { Builder, By, until } from "selenium-webdriver";
 import "chromedriver";
 
 describe("Open active quests screen", async function () {
   let driver;
-  this.timeout(20000);
+  this.timeout(30000);
+
   before(async function () {
     driver = await new Builder().forBrowser("chrome").build();
   });
+
   it("should show active quests screen", async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
     const userName = `veronika.filipenko+${randomNumber}@cere.io`;
     const otp = "555555";
+
     await driver.get(
-      "https://telegram-viewer-app.stage.cere.io/?campaignId=114"
+      "https://telegram-viewer-app.stage.cere.io/?campaignId=120"
     );
 
+    await driver.wait(until.elementLocated(By.className("hero-title")), 10000);
     const welcomeTitle = await driver
       .findElement(By.className("hero-title"))
       .getText();
@@ -24,28 +28,74 @@ describe("Open active quests screen", async function () {
     await driver.findElement(By.className("tgui-bca5056bf34297b0")).click();
     await driver.findElement(By.className("welcom-cta-text")).click();
 
-    await driver.findElement(By.id("sign_in")).click();
-    await driver.findElement(By.name("email")).sendKeys(userName);
-    await driver.findElement(By.id(":r1:")).click();
-    await driver.findElement(By.id("otp")).sendKeys(otp);
-    await driver.findElement(By.id(":r3:")).click();
+    await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
+    let torusFrame = await driver.findElement(By.id("torusIframe"));
+    driver.switchTo().frame(torusFrame);
+    console.log("opened 1 iframe");
 
+    let embeddedFrame = await driver.findElement(
+      By.css('iframe[title="Embedded browser"]', 30000)
+    );
+    driver.switchTo().frame(embeddedFrame);
+    console.log("opened 2 iframe");
+
+    let buttonLogin = await driver.findElement(
+      By.xpath("//button[contains(text(), 'I already have a wallet')]")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", buttonLogin);
+    await driver.wait(until.elementIsVisible(buttonLogin), 10000);
+    await buttonLogin.click();
+
+    let emailInput = await driver.findElement(
+      By.xpath("//input[@type='text' and @name='Email']")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", emailInput);
+    await driver.wait(until.elementIsVisible(emailInput), 10000);
+    await emailInput.sendKeys(userName);
+
+    let signInButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Sign In')]")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", signInButton);
+    await driver.wait(until.elementIsVisible(signInButton), 10000);
+    await signInButton.click();
+
+    let otpInput = await driver.findElement(
+      By.xpath("//input[@type='text' and @name='OTP input']")
+    );
+    await driver.wait(until.elementIsVisible(otpInput), 10000);
+    await otpInput.sendKeys(otp);
+
+    let verifyButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Verify')]")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", verifyButton);
+    await driver.wait(until.elementIsVisible(verifyButton), 10000);
+    await verifyButton.click();
+
+    await driver.switchTo().defaultContent();
+    await driver.wait(until.elementLocated(By.className("t1uqjrzu")), 10000);
     const questTitle = await driver
       .findElement(By.className("t1uqjrzu"))
       .getText();
     expect(questTitle).to.equal("Complete Quests to Earn!");
 
+    await driver.wait(
+      until.elementLocated(By.className("tgui-e6658d0b8927f95e")),
+      10000
+    );
     const questTab = await driver
       .findElement(By.className("tgui-e6658d0b8927f95e"))
       .getText();
     expect(questTab).to.equal("Active Quests");
   });
+
   after(async function () {
     await driver.quit();
   });
 });
 
-describe.only("Answer on quiz questions", async function () {
+describe("Answer on quiz questions", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
@@ -59,6 +109,7 @@ describe.only("Answer on quiz questions", async function () {
       "https://telegram-viewer-app.stage.cere.io/?campaignId=120"
     );
 
+    await driver.wait(until.elementLocated(By.className("hero-title")), 10000);
     const welcomeTitle = await driver
       .findElement(By.className("hero-title"))
       .getText();
@@ -67,11 +118,52 @@ describe.only("Answer on quiz questions", async function () {
     await driver.findElement(By.className("tgui-bca5056bf34297b0")).click();
     await driver.findElement(By.className("welcom-cta-text")).click();
 
-    await driver.findElement(By.id("sign_in")).click();
-    await driver.findElement(By.name("email")).sendKeys(userName);
-    await driver.findElement(By.id(":r7:")).click();
-    await driver.findElement(By.className("css-6f6728")).sendKeys(otp);
-    await driver.findElement(By.id(":r3:")).click();
+    await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
+    let torusFrame = await driver.findElement(By.id("torusIframe"));
+    driver.switchTo().frame(torusFrame);
+    console.log("opened 1 iframe");
+
+    let embeddedFrame = await driver.findElement(
+      By.css('iframe[title="Embedded browser"]', 30000)
+    );
+    driver.switchTo().frame(embeddedFrame);
+    console.log("opened 2 iframe");
+
+    let buttonLogin = await driver.findElement(
+      By.xpath("//button[contains(text(), 'I already have a wallet')]")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", buttonLogin);
+    await driver.wait(until.elementIsVisible(buttonLogin), 10000);
+    await buttonLogin.click();
+
+    let emailInput = await driver.findElement(
+      By.xpath("//input[@type='text' and @name='Email']")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", emailInput);
+    await driver.wait(until.elementIsVisible(emailInput), 10000);
+    await emailInput.sendKeys(userName);
+
+    let signInButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Sign In')]")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", signInButton);
+    await driver.wait(until.elementIsVisible(signInButton), 10000);
+    await signInButton.click();
+
+    let otpInput = await driver.findElement(
+      By.xpath("//input[@type='text' and @name='OTP input']")
+    );
+    await driver.wait(until.elementIsVisible(otpInput), 10000);
+    await otpInput.sendKeys(otp);
+
+    let verifyButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Verify')]")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", verifyButton);
+    await driver.wait(until.elementIsVisible(verifyButton), 10000);
+    await verifyButton.click();
+
+    await driver.switchTo().defaultContent();
 
     const questTitle = await driver
       .findElement(By.className("t1uqjrzu"))
@@ -107,17 +199,64 @@ describe("Open leaderboard screen", async function () {
     const userName = `veronika.filipenko+${randomNumber}@cere.io`;
     const otp = "555555";
     await driver.get(
-      "https://telegram-viewer-app.stage.cere.io/?campaignId=114"
+      "https://telegram-viewer-app.stage.cere.io/?campaignId=120"
     );
+
+    await driver.wait(until.elementLocated(By.className("hero-title")), 10000);
+    const welcomeTitle = await driver
+      .findElement(By.className("hero-title"))
+      .getText();
+    expect(welcomeTitle).to.equal("Sit back, Enjoy, and Earn!");
 
     await driver.findElement(By.className("tgui-bca5056bf34297b0")).click();
     await driver.findElement(By.className("welcom-cta-text")).click();
 
-    await driver.findElement(By.id("sign_in")).click();
-    await driver.findElement(By.name("email")).sendKeys(userName);
-    await driver.findElement(By.id(":r1:")).click();
-    await driver.findElement(By.id("otp")).sendKeys(otp);
-    await driver.findElement(By.id(":r3:")).click();
+    await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
+    let torusFrame = await driver.findElement(By.id("torusIframe"));
+    driver.switchTo().frame(torusFrame);
+    console.log("opened 1 iframe");
+
+    let embeddedFrame = await driver.findElement(
+      By.css('iframe[title="Embedded browser"]', 30000)
+    );
+    driver.switchTo().frame(embeddedFrame);
+    console.log("opened 2 iframe");
+
+    let buttonLogin = await driver.findElement(
+      By.xpath("//button[contains(text(), 'I already have a wallet')]")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", buttonLogin);
+    await driver.wait(until.elementIsVisible(buttonLogin), 10000);
+    await buttonLogin.click();
+
+    let emailInput = await driver.findElement(
+      By.xpath("//input[@type='text' and @name='Email']")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", emailInput);
+    await driver.wait(until.elementIsVisible(emailInput), 10000);
+    await emailInput.sendKeys(userName);
+
+    let signInButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Sign In')]")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", signInButton);
+    await driver.wait(until.elementIsVisible(signInButton), 10000);
+    await signInButton.click();
+
+    let otpInput = await driver.findElement(
+      By.xpath("//input[@type='text' and @name='OTP input']")
+    );
+    await driver.wait(until.elementIsVisible(otpInput), 10000);
+    await otpInput.sendKeys(otp);
+
+    let verifyButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Verify')]")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", verifyButton);
+    await driver.wait(until.elementIsVisible(verifyButton), 10000);
+    await verifyButton.click();
+
+    await driver.switchTo().defaultContent();
 
     const questTitle = await driver
       .findElement(By.className("t1uqjrzu"))
@@ -163,17 +302,64 @@ describe("Open library screen", async function () {
     const userName = `veronika.filipenko+${randomNumber}@cere.io`;
     const otp = "555555";
     await driver.get(
-      "https://telegram-viewer-app.stage.cere.io/?campaignId=114"
+      "https://telegram-viewer-app.stage.cere.io/?campaignId=120"
     );
+
+    await driver.wait(until.elementLocated(By.className("hero-title")), 10000);
+    const welcomeTitle = await driver
+      .findElement(By.className("hero-title"))
+      .getText();
+    expect(welcomeTitle).to.equal("Sit back, Enjoy, and Earn!");
 
     await driver.findElement(By.className("tgui-bca5056bf34297b0")).click();
     await driver.findElement(By.className("welcom-cta-text")).click();
 
-    await driver.findElement(By.id("sign_in")).click();
-    await driver.findElement(By.name("email")).sendKeys(userName);
-    await driver.findElement(By.id(":r1:")).click();
-    await driver.findElement(By.id("otp")).sendKeys(otp);
-    await driver.findElement(By.id(":r3:")).click();
+    await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
+    let torusFrame = await driver.findElement(By.id("torusIframe"));
+    driver.switchTo().frame(torusFrame);
+    console.log("opened 1 iframe");
+
+    let embeddedFrame = await driver.findElement(
+      By.css('iframe[title="Embedded browser"]', 30000)
+    );
+    driver.switchTo().frame(embeddedFrame);
+    console.log("opened 2 iframe");
+
+    let buttonLogin = await driver.findElement(
+      By.xpath("//button[contains(text(), 'I already have a wallet')]")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", buttonLogin);
+    await driver.wait(until.elementIsVisible(buttonLogin), 10000);
+    await buttonLogin.click();
+
+    let emailInput = await driver.findElement(
+      By.xpath("//input[@type='text' and @name='Email']")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", emailInput);
+    await driver.wait(until.elementIsVisible(emailInput), 10000);
+    await emailInput.sendKeys(userName);
+
+    let signInButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Sign In')]")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", signInButton);
+    await driver.wait(until.elementIsVisible(signInButton), 10000);
+    await signInButton.click();
+
+    let otpInput = await driver.findElement(
+      By.xpath("//input[@type='text' and @name='OTP input']")
+    );
+    await driver.wait(until.elementIsVisible(otpInput), 10000);
+    await otpInput.sendKeys(otp);
+
+    let verifyButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Verify')]")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView();", verifyButton);
+    await driver.wait(until.elementIsVisible(verifyButton), 10000);
+    await verifyButton.click();
+
+    await driver.switchTo().defaultContent();
 
     const questTitle = await driver
       .findElement(By.className("t1uqjrzu"))
