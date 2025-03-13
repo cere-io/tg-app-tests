@@ -14,9 +14,12 @@
   },
   "devDependencies": {
     "chai": "^5.2.0",
-    "chromedriver": "^134.0.1",
+    "chromedriver": "^134.0.2",
     "mocha": "^11.1.0",
     "prettier": "^3.5.1",
     "selenium-webdriver": "^4.29.0"
+  },
+  "dependencies": {
+    "assert": "^2.1.0"
   }
 }
