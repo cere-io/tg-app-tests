@@ -1,12 +1,13 @@
 import { expect } from "chai";
 import { Builder, By } from "selenium-webdriver";
 import "chromedriver";
+import { createDriver } from "./driver.js";
 
 describe("Load data", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await new Builder().forBrowser("chrome").build();
+    driver = await createDriver();
   });
   it("should show data using app public key", async function () {
     this.timeout(20000);
@@ -81,7 +82,7 @@ describe("Load data negative case", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await new Builder().forBrowser("chrome").build();
+    driver = await createDriver();
   });
   it("should show an error", async function () {
     this.timeout(20000);

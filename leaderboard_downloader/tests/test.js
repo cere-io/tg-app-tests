@@ -1,12 +1,13 @@
 import { expect } from "chai";
 import { Builder, By } from "selenium-webdriver";
 import "chromedriver";
+import { createDriver } from "./driver.js";
 
 describe("Download csv file for existing campaign", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await new Builder().forBrowser("chrome").build();
+    driver = await createDriver();
   });
   it("should download csv file", async function () {
     this.timeout(20000);
@@ -94,7 +95,7 @@ describe("Download csv file for NOT existing campaign", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await new Builder().forBrowser("chrome").build();
+    driver = await createDriver();
   });
   it("should show an error", async function () {
     this.timeout(20000);

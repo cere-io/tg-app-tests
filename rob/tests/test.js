@@ -1,12 +1,13 @@
 import { expect } from "chai";
 import { Builder, By } from "selenium-webdriver";
 import "chromedriver";
+import { createDriver } from "./driver.js";
 
 describe("Create new campaign", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await new Builder().forBrowser("chrome").build();
+    driver = await createDriver();
   });
   it("should create new campaign", async function () {
     this.timeout(20000);
@@ -57,7 +58,7 @@ describe("Create new template", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await new Builder().forBrowser("chrome").build();
+    driver = await createDriver();
   });
   it("should create new template", async function () {
     this.timeout(20000);
@@ -143,7 +144,7 @@ describe("Create new event trigger", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await new Builder().forBrowser("chrome").build();
+    driver = await createDriver();
   });
   it("should create new event trigger", async function () {
     this.timeout(20000);
@@ -182,7 +183,7 @@ describe("Create new engagement", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await new Builder().forBrowser("chrome").build();
+    driver = await createDriver();
   });
   it("should create new engagement", async function () {
     this.timeout(20000);
@@ -260,7 +261,7 @@ describe("Create new campaign negative case", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await new Builder().forBrowser("chrome").build();
+    driver = await createDriver();
   });
   it("should show an error", async function () {
     this.timeout(20000);
@@ -297,7 +298,7 @@ describe("Create new event trigger negative case", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await new Builder().forBrowser("chrome").build();
+    driver = await createDriver();
   });
   it("should show an error", async function () {
     this.timeout(20000);
