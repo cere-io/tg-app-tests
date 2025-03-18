@@ -8,7 +8,11 @@ async function createDriver() {
     capabilities: {
       browserName: "chrome",
       "goog:chromeOptions": {
-        args: [`--user-data-dir=${userDataDir}`, "--no-sandbox"],
+        args: [
+          `--user-data-dir=${userDataDir}`,
+          "--no-sandbox",
+          "--disable-dev-shm-usage",
+        ],
       },
     },
   };
