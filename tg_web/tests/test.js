@@ -1,13 +1,14 @@
 import { expect } from "chai";
 import { Builder, By, until } from "selenium-webdriver";
 import "chromedriver";
+import { createDriver } from "./driver.js";
 
 describe("Open active quests screen", async function () {
   let driver;
   this.timeout(30000);
 
   before(async function () {
-    driver = await new Builder().forBrowser("chrome").build();
+    driver = await createDriver();
   });
 
   it("should show active quests screen", async function () {
@@ -99,7 +100,7 @@ describe("Answer on quiz questions", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await new Builder().forBrowser("chrome").build();
+    driver = await createDriver();
   });
   it("should answer on quiz questions", async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
@@ -192,7 +193,7 @@ describe("Open leaderboard screen", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await new Builder().forBrowser("chrome").build();
+    driver = await createDriver();
   });
   it("should show leaderboard screen", async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
@@ -295,7 +296,7 @@ describe("Open library screen", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await new Builder().forBrowser("chrome").build();
+    driver = await createDriver();
   });
   it("should show library screen", async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
