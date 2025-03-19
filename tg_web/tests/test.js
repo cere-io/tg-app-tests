@@ -1,14 +1,28 @@
+import { Builder, By, until } from "selenium-webdriver";
+import chrome from "selenium-webdriver/chrome";
 import { expect } from "chai";
-import { By, until } from "selenium-webdriver";
-import "chromedriver";
-import { createDriver } from "../../driver.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 describe("Open active quests screen", async function () {
   let driver;
   this.timeout(30000);
 
   before(async function () {
-    driver = await createDriver();
+    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    fs.mkdirSync(userDataDir, { recursive: true });
+
+    const options = new chrome.Options();
+    options.addArguments(`--user-data-dir=${userDataDir}`);
+
+    driver = await new Builder()
+      .forBrowser("chrome")
+      .setChromeOptions(options)
+      .build();
   });
 
   it("should show active quests screen", async function () {
@@ -100,7 +114,16 @@ describe("Answer on quiz questions", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await createDriver();
+    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    fs.mkdirSync(userDataDir, { recursive: true });
+
+    const options = new chrome.Options();
+    options.addArguments(`--user-data-dir=${userDataDir}`);
+
+    driver = await new Builder()
+      .forBrowser("chrome")
+      .setChromeOptions(options)
+      .build();
   });
   it("should answer on quiz questions", async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
@@ -193,7 +216,16 @@ describe("Open leaderboard screen", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await createDriver();
+    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    fs.mkdirSync(userDataDir, { recursive: true });
+
+    const options = new chrome.Options();
+    options.addArguments(`--user-data-dir=${userDataDir}`);
+
+    driver = await new Builder()
+      .forBrowser("chrome")
+      .setChromeOptions(options)
+      .build();
   });
   it("should show leaderboard screen", async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
@@ -296,7 +328,16 @@ describe("Open library screen", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await createDriver();
+    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    fs.mkdirSync(userDataDir, { recursive: true });
+
+    const options = new chrome.Options();
+    options.addArguments(`--user-data-dir=${userDataDir}`);
+
+    driver = await new Builder()
+      .forBrowser("chrome")
+      .setChromeOptions(options)
+      .build();
   });
   it("should show library screen", async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
