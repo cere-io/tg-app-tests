@@ -1,7 +1,7 @@
 import { expect } from "chai";
-import { Builder, By } from "selenium-webdriver";
+import { By } from "selenium-webdriver";
 import "chromedriver";
-import { createDriver } from "./driver.js";
+import { createDriver } from "../../driver.js";
 
 describe("Create new campaign", async function () {
   let driver;
