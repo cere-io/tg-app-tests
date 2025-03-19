@@ -1,14 +1,30 @@
+import { Builder, By, until } from "selenium-webdriver";
+import chrome from "selenium-webdriver/chrome";
 import { expect } from "chai";
-import { By } from "selenium-webdriver";
-import "chromedriver";
-import { createDriver } from "../../driver.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-describe("Load data", async function () {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+describe("Load data", function () {
   let driver;
   this.timeout(20000);
+
   before(async function () {
-    driver = await createDriver();
+    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    fs.mkdirSync(userDataDir, { recursive: true });
+
+    const options = new chrome.Options();
+    options.addArguments(`--user-data-dir=${userDataDir}`);
+
+    driver = await new Builder()
+      .forBrowser("chrome")
+      .setChromeOptions(options)
+      .build();
   });
+
   it("should show data using app public key", async function () {
     this.timeout(20000);
     const email = "veronika.filipenko@cere.io";
@@ -39,7 +55,7 @@ describe("Load data", async function () {
     );
     await driver.executeScript("arguments[0].scrollIntoView();", emailInput);
     await driver.wait(until.elementIsVisible(emailInput), 10000);
-    await emailInput.sendKeys(userName);
+    await emailInput.sendKeys(email);
 
     let signInButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Sign In')]")
@@ -73,6 +89,7 @@ describe("Load data", async function () {
     await driver.findElement(By.id("load_data")).click();
     await driver.findElement(By.id("decrypt_all")).click();
   });
+
   after(async function () {
     await driver.quit();
   });
@@ -82,7 +99,16 @@ describe("Load data negative case", async function () {
   let driver;
   this.timeout(20000);
   before(async function () {
-    driver = await createDriver();
+    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    fs.mkdirSync(userDataDir, { recursive: true });
+
+    const options = new chrome.Options();
+    options.addArguments(`--user-data-dir=${userDataDir}`);
+
+    driver = await new Builder()
+      .forBrowser("chrome")
+      .setChromeOptions(options)
+      .build();
   });
   it("should show an error", async function () {
     this.timeout(20000);
