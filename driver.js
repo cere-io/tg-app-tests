@@ -1,23 +1,21 @@
-const { remote } = require("webdriverio");
-const path = require("path");
+import { Builder } from "selenium-webdriver";
+import chrome from "selenium-webdriver/chrome";
+import path from "path";
 
-async function createDriver() {
-  const userDataDir = path.join(__dirname, "user-data", Date.now().toString());
+export async function createDriver() {
+  const userDataDir = path.join(
+    path.resolve(),
+    "user-data",
+    Date.now().toString()
+  );
 
-  const options = {
-    capabilities: {
-      browserName: "chrome",
-      "goog:chromeOptions": {
-        args: [
-          `--user-data-dir=${userDataDir}`,
-          "--no-sandbox",
-          "--disable-dev-shm-usage",
-        ],
-      },
-    },
-  };
+  const options = new chrome.Options()
+    .addArguments(`--user-data-dir=${userDataDir}`)
+    .addArguments("--no-sandbox")
+    .addArguments("--disable-dev-shm-usage");
 
-  return await remote(options);
+  return await new Builder()
+    .forBrowser("chrome")
+    .setChromeOptions(options)
+    .build();
 }
-
-module.exports = { createDriver };
