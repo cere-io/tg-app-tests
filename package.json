@@ -19,9 +19,12 @@
   },
   "devDependencies": {
     "chai": "^5.1.2",
-    "chromedriver": "^133.0.0",
+    "chromedriver": "^134.0.3",
     "geckodriver": "^5.0.0",
     "mocha": "^10.8.2",
     "selenium-webdriver": "^4.28.1"
+  },
+  "dependencies": {
+    "glob": "^11.0.1"
   }
 }
