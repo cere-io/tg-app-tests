@@ -1,5 +1,5 @@
 import { Builder, By, until } from "selenium-webdriver";
-import chrome from "selenium-webdriver/chrome";
+import chrome from "selenium-webdriver/chrome.js";
 import { expect } from "chai";
 import fs from "fs";
 import path from "path";
@@ -107,6 +107,11 @@ describe("Open active quests screen", async function () {
 
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
 
@@ -209,6 +214,11 @@ describe("Answer on quiz questions", async function () {
 
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
 
@@ -321,6 +331,11 @@ describe("Open leaderboard screen", async function () {
   });
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
 
@@ -419,5 +434,10 @@ describe("Open library screen", async function () {
   });
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });

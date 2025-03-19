@@ -1,5 +1,5 @@
 import { Builder, By, until } from "selenium-webdriver";
-import chrome from "selenium-webdriver/chrome";
+import chrome from "selenium-webdriver/chrome.js";
 import { expect } from "chai";
 import fs from "fs";
 import path from "path";
@@ -65,6 +65,11 @@ describe("Create new campaign", async function () {
   });
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
 
@@ -160,6 +165,11 @@ describe("Create new template", async function () {
   });
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
 
@@ -208,6 +218,11 @@ describe("Create new event trigger", async function () {
   });
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
 
@@ -295,6 +310,11 @@ describe("Create new engagement", async function () {
   });
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
 
@@ -341,6 +361,11 @@ describe("Create new campaign negative case", async function () {
   });
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
 
@@ -386,5 +411,10 @@ describe("Create new event trigger negative case", async function () {
   });
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });

@@ -1,5 +1,5 @@
 import { Builder, By, until } from "selenium-webdriver";
-import chrome from "selenium-webdriver/chrome";
+import chrome from "selenium-webdriver/chrome.js";
 import { expect } from "chai";
 import fs from "fs";
 import path from "path";
@@ -13,16 +13,25 @@ describe("Load data", function () {
   this.timeout(20000);
 
   before(async function () {
+    this.timeout(60000);
+    console.log("Create folder...");
     const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
+    console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(options)
+      .setChromeOptions(
+        new chrome.Options()
+          .addArguments("--verbose")
+          .addArguments("--log-path=chromedriver.log")
+      )
       .build();
+    console.log("WebDriver launched!");
   });
 
   it("should show data using app public key", async function () {
@@ -89,9 +98,13 @@ describe("Load data", function () {
     await driver.findElement(By.id("load_data")).click();
     await driver.findElement(By.id("decrypt_all")).click();
   });
-
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
 
@@ -182,5 +195,10 @@ describe("Load data negative case", async function () {
   });
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });

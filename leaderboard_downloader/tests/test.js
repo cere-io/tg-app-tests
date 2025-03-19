@@ -1,5 +1,5 @@
 import { Builder, By, until } from "selenium-webdriver";
-import chrome from "selenium-webdriver/chrome";
+import chrome from "selenium-webdriver/chrome.js";
 import { expect } from "chai";
 import fs from "fs";
 import path from "path";
@@ -102,6 +102,11 @@ describe("Download csv file for existing campaign", async function () {
   });
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
 
@@ -192,5 +197,10 @@ describe("Download csv file for NOT existing campaign", async function () {
   });
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
