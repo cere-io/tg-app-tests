@@ -1,7 +1,7 @@
 import { expect } from "chai";
-import { Builder, By, until } from "selenium-webdriver";
+import { By, until } from "selenium-webdriver";
 import "chromedriver";
-import { createDriver } from "./driver.js";
+import { createDriver } from "../../driver.js";
 
 describe("Open active quests screen", async function () {
   let driver;
