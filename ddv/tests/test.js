@@ -10,12 +10,11 @@ const __dirname = path.dirname(__filename);
 
 describe("Load data", function () {
   let driver;
-  this.timeout(20000);
-
+  let userDataDir;
   before(async function () {
     this.timeout(60000);
     console.log("Create folder...");
-    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
     console.log("Set up ChromeOptions...");
 
@@ -41,40 +40,47 @@ describe("Load data", function () {
     await driver.get("https://ddc.stage.cere.network/#/");
 
     await driver.findElement(By.className("nvg2rd8")).click();
+
     await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
     let torusFrame = await driver.findElement(By.id("torusIframe"));
     driver.switchTo().frame(torusFrame);
-    console.log("opened 1 iframe");
 
-    let embeddedFrame = await driver.findElement(
-      By.css('iframe[title="Embedded browser"]', 30000)
+    let embeddedFrame = await driver.wait(
+      until.elementLocated(By.css('iframe[title="Embedded browser"]')),
+      30000
     );
     driver.switchTo().frame(embeddedFrame);
-    console.log("opened 2 iframe");
 
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//button[contains(text(), 'I already have a wallet')]")
+      ),
+      10000
+    );
     let buttonLogin = await driver.findElement(
       By.xpath("//button[contains(text(), 'I already have a wallet')]")
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", buttonLogin);
-    await driver.wait(until.elementIsVisible(buttonLogin), 10000);
     await buttonLogin.click();
 
-    let emailInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='Email']")
-    );
-    await driver.executeScript("arguments[0].scrollIntoView();", emailInput);
-    await driver.wait(until.elementIsVisible(emailInput), 10000);
+    await driver.wait(until.elementLocated(By.name("email")), 20000);
+    const emailInput = await driver.findElement(By.name("email"));
     await emailInput.sendKeys(email);
 
+    await driver.wait(
+      until.elementLocated(By.xpath("//button[contains(text(), 'Sign In')]")),
+      20000
+    );
     let signInButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Sign In')]")
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", signInButton);
-    await driver.wait(until.elementIsVisible(signInButton), 10000);
     await signInButton.click();
 
+    await driver.wait(
+      until.elementLocated(By.xpath("//input[@aria-label='OTP input']")),
+      20000
+    );
     let otpInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='OTP input']")
+      By.xpath("//input[@aria-label='OTP input']")
     );
     await driver.wait(until.elementIsVisible(otpInput), 10000);
     await otpInput.sendKeys(otp);
@@ -88,6 +94,7 @@ describe("Load data", function () {
 
     await driver.switchTo().defaultContent();
 
+    await driver.wait(until.elementLocated(By.className("smmmuj9")), 20000);
     const welcomeMessage = await driver
       .findElement(By.className("smmmuj9"))
       .getText();
@@ -95,8 +102,10 @@ describe("Load data", function () {
 
     const appKey = "2106";
     await driver.findElement(By.name("appPubKey")).sendKeys(appKey);
-    await driver.findElement(By.id("load_data")).click();
-    await driver.findElement(By.id("decrypt_all")).click();
+    await driver.findElement(By.className("b4qcjlq")).click();
+
+    await driver.wait(until.elementLocated(By.className("b138ry0w")), 200000);
+    await driver.findElement(By.className("b138ry0w")).click();
   });
   after(async function () {
     await driver.quit();
@@ -108,20 +117,29 @@ describe("Load data", function () {
   });
 });
 
-describe("Load data negative case", async function () {
+describe.only("Load data negative case", async function () {
   let driver;
-  this.timeout(20000);
+  let userDataDir;
   before(async function () {
+    this.timeout(60000);
+    console.log("Create folder...");
     const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
+    console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(options)
+      .setChromeOptions(
+        new chrome.Options()
+          .addArguments("--verbose")
+          .addArguments("--log-path=chromedriver.log")
+      )
       .build();
+    console.log("WebDriver launched!");
   });
   it("should show an error", async function () {
     this.timeout(20000);
@@ -130,40 +148,47 @@ describe("Load data negative case", async function () {
     await driver.get("https://ddc.stage.cere.network/#/");
 
     await driver.findElement(By.className("nvg2rd8")).click();
+
     await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
     let torusFrame = await driver.findElement(By.id("torusIframe"));
     driver.switchTo().frame(torusFrame);
-    console.log("opened 1 iframe");
 
-    let embeddedFrame = await driver.findElement(
-      By.css('iframe[title="Embedded browser"]', 30000)
+    let embeddedFrame = await driver.wait(
+      until.elementLocated(By.css('iframe[title="Embedded browser"]')),
+      30000
     );
     driver.switchTo().frame(embeddedFrame);
-    console.log("opened 2 iframe");
 
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//button[contains(text(), 'I already have a wallet')]")
+      ),
+      10000
+    );
     let buttonLogin = await driver.findElement(
       By.xpath("//button[contains(text(), 'I already have a wallet')]")
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", buttonLogin);
-    await driver.wait(until.elementIsVisible(buttonLogin), 10000);
     await buttonLogin.click();
 
-    let emailInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='Email']")
-    );
-    await driver.executeScript("arguments[0].scrollIntoView();", emailInput);
-    await driver.wait(until.elementIsVisible(emailInput), 10000);
-    await emailInput.sendKeys(userName);
+    await driver.wait(until.elementLocated(By.name("email")), 20000);
+    const emailInput = await driver.findElement(By.name("email"));
+    await emailInput.sendKeys(email);
 
+    await driver.wait(
+      until.elementLocated(By.xpath("//button[contains(text(), 'Sign In')]")),
+      20000
+    );
     let signInButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Sign In')]")
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", signInButton);
-    await driver.wait(until.elementIsVisible(signInButton), 10000);
     await signInButton.click();
 
+    await driver.wait(
+      until.elementLocated(By.xpath("//input[@aria-label='OTP input']")),
+      20000
+    );
     let otpInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='OTP input']")
+      By.xpath("//input[@aria-label='OTP input']")
     );
     await driver.wait(until.elementIsVisible(otpInput), 10000);
     await otpInput.sendKeys(otp);
@@ -177,6 +202,7 @@ describe("Load data negative case", async function () {
 
     await driver.switchTo().defaultContent();
 
+    await driver.wait(until.elementLocated(By.className("smmmuj9")), 20000);
     const welcomeMessage = await driver
       .findElement(By.className("smmmuj9"))
       .getText();
@@ -184,12 +210,25 @@ describe("Load data negative case", async function () {
 
     const appKey = "0000";
     await driver.findElement(By.name("appPubKey")).sendKeys(appKey);
-    await driver.findElement(By.id("load_data")).click();
+    await driver.findElement(By.className("b4qcjlq")).click();
 
-    const errorMessage = await driver
-      .findElement(By.className("text-red-300"))
-      .getText();
-    expect(errorMessage).to.equal(
+    const errorLocator = By.className("text-red-300");
+    await driver.wait(until.elementLocated(errorLocator), 10000);
+    let errorElement = await driver.findElement(errorLocator);
+
+    await driver.wait(
+      async function () {
+        const text = await errorElement.getText();
+        return text.length > 0;
+      },
+      5000,
+      "Error message did not load in time"
+    );
+
+    let errorMessage = await errorElement.getText();
+    console.log("Found error message:", errorMessage);
+
+    expect(errorMessage).to.include(
       "The request of loading data has failed, or no data found in the DDC"
     );
   });

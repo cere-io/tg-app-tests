@@ -10,18 +10,27 @@ const __dirname = path.dirname(__filename);
 
 describe("Create new campaign", async function () {
   let driver;
-  this.timeout(20000);
+  let userDataDir;
   before(async function () {
-    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    this.timeout(60000);
+    console.log("Create folder...");
+    userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
+    console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(options)
+      .setChromeOptions(
+        new chrome.Options()
+          .addArguments("--verbose")
+          .addArguments("--log-path=chromedriver.log")
+      )
       .build();
+    console.log("WebDriver launched!");
   });
   it("should create new campaign", async function () {
     this.timeout(20000);
@@ -59,9 +68,6 @@ describe("Create new campaign", async function () {
       .click();
     await driver.findElement(By.id("status")).click();
     await driver.findElement(By.id("appCreateButton")).click();
-
-    // add here check that campaign was created
-    // add archive created campaign
   });
   after(async function () {
     await driver.quit();
@@ -75,18 +81,27 @@ describe("Create new campaign", async function () {
 
 describe("Create new template", async function () {
   let driver;
-  this.timeout(20000);
+  let userDataDir;
   before(async function () {
-    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    this.timeout(60000);
+    console.log("Create folder...");
+    userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
+    console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(options)
+      .setChromeOptions(
+        new chrome.Options()
+          .addArguments("--verbose")
+          .addArguments("--log-path=chromedriver.log")
+      )
       .build();
+    console.log("WebDriver launched!");
   });
   it("should create new template", async function () {
     this.timeout(20000);
@@ -159,9 +174,6 @@ describe("Create new template", async function () {
       .sendKeys(htmlRaw);
 
     await driver.findElement(By.className("create_new")).click(); //doesn't work, need to add id for this button
-
-    // add here check that template was created
-    // add delete created template
   });
   after(async function () {
     await driver.quit();
@@ -175,18 +187,27 @@ describe("Create new template", async function () {
 
 describe("Create new event trigger", async function () {
   let driver;
-  this.timeout(20000);
+  let userDataDir;
   before(async function () {
-    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    this.timeout(60000);
+    console.log("Create folder...");
+    userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
+    console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(options)
+      .setChromeOptions(
+        new chrome.Options()
+          .addArguments("--verbose")
+          .addArguments("--log-path=chromedriver.log")
+      )
       .build();
+    console.log("WebDriver launched!");
   });
   it("should create new event trigger", async function () {
     this.timeout(20000);
@@ -228,18 +249,27 @@ describe("Create new event trigger", async function () {
 
 describe("Create new engagement", async function () {
   let driver;
-  this.timeout(20000);
+  let userDataDir;
   before(async function () {
-    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    this.timeout(60000);
+    console.log("Create folder...");
+    userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
+    console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(options)
+      .setChromeOptions(
+        new chrome.Options()
+          .addArguments("--verbose")
+          .addArguments("--log-path=chromedriver.log")
+      )
       .build();
+    console.log("WebDriver launched!");
   });
   it("should create new engagement", async function () {
     this.timeout(20000);
@@ -320,18 +350,27 @@ describe("Create new engagement", async function () {
 
 describe("Create new campaign negative case", async function () {
   let driver;
-  this.timeout(20000);
+  let userDataDir;
   before(async function () {
-    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    this.timeout(60000);
+    console.log("Create folder...");
+    userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
+    console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(options)
+      .setChromeOptions(
+        new chrome.Options()
+          .addArguments("--verbose")
+          .addArguments("--log-path=chromedriver.log")
+      )
       .build();
+    console.log("WebDriver launched!");
   });
   it("should show an error", async function () {
     this.timeout(20000);
@@ -371,18 +410,27 @@ describe("Create new campaign negative case", async function () {
 
 describe("Create new event trigger negative case", async function () {
   let driver;
-  this.timeout(20000);
+  let userDataDir;
   before(async function () {
-    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    this.timeout(60000);
+    console.log("Create folder...");
+    userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
+    console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(options)
+      .setChromeOptions(
+        new chrome.Options()
+          .addArguments("--verbose")
+          .addArguments("--log-path=chromedriver.log")
+      )
       .build();
+    console.log("WebDriver launched!");
   });
   it("should show an error", async function () {
     this.timeout(20000);

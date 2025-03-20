@@ -10,18 +10,27 @@ const __dirname = path.dirname(__filename);
 
 describe("Download csv file for existing campaign", async function () {
   let driver;
-  this.timeout(20000);
+  let userDataDir;
   before(async function () {
-    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    this.timeout(60000);
+    console.log("Create folder...");
+    userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
+    console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(options)
+      .setChromeOptions(
+        new chrome.Options()
+          .addArguments("--verbose")
+          .addArguments("--log-path=chromedriver.log")
+      )
       .build();
+    console.log("WebDriver launched!");
   });
   it("should download csv file", async function () {
     this.timeout(20000);
@@ -32,40 +41,47 @@ describe("Download csv file for existing campaign", async function () {
     );
 
     await driver.findElement(By.css("button")).click();
+
     await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
     let torusFrame = await driver.findElement(By.id("torusIframe"));
     driver.switchTo().frame(torusFrame);
-    console.log("opened 1 iframe");
 
-    let embeddedFrame = await driver.findElement(
-      By.css('iframe[title="Embedded browser"]', 30000)
+    let embeddedFrame = await driver.wait(
+      until.elementLocated(By.css('iframe[title="Embedded browser"]')),
+      30000
     );
     driver.switchTo().frame(embeddedFrame);
-    console.log("opened 2 iframe");
 
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//button[contains(text(), 'I already have a wallet')]")
+      ),
+      10000
+    );
     let buttonLogin = await driver.findElement(
       By.xpath("//button[contains(text(), 'I already have a wallet')]")
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", buttonLogin);
-    await driver.wait(until.elementIsVisible(buttonLogin), 10000);
     await buttonLogin.click();
 
-    let emailInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='Email']")
-    );
-    await driver.executeScript("arguments[0].scrollIntoView();", emailInput);
-    await driver.wait(until.elementIsVisible(emailInput), 10000);
-    await emailInput.sendKeys(userName);
+    await driver.wait(until.elementLocated(By.name("email")), 20000);
+    const emailInput = await driver.findElement(By.name("email"));
+    await emailInput.sendKeys(email);
 
+    await driver.wait(
+      until.elementLocated(By.xpath("//button[contains(text(), 'Sign In')]")),
+      20000
+    );
     let signInButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Sign In')]")
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", signInButton);
-    await driver.wait(until.elementIsVisible(signInButton), 10000);
     await signInButton.click();
 
+    await driver.wait(
+      until.elementLocated(By.xpath("//input[@aria-label='OTP input']")),
+      20000
+    );
     let otpInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='OTP input']")
+      By.xpath("//input[@aria-label='OTP input']")
     );
     await driver.wait(until.elementIsVisible(otpInput), 10000);
     await otpInput.sendKeys(otp);
@@ -112,18 +128,27 @@ describe("Download csv file for existing campaign", async function () {
 
 describe("Download csv file for NOT existing campaign", async function () {
   let driver;
-  this.timeout(20000);
+  let userDataDir;
   before(async function () {
-    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    this.timeout(60000);
+    console.log("Create folder...");
+    userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
+    console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(options)
+      .setChromeOptions(
+        new chrome.Options()
+          .addArguments("--verbose")
+          .addArguments("--log-path=chromedriver.log")
+      )
       .build();
+    console.log("WebDriver launched!");
   });
   it("should show an error", async function () {
     this.timeout(20000);
@@ -134,40 +159,47 @@ describe("Download csv file for NOT existing campaign", async function () {
     );
 
     await driver.findElement(By.css("button")).click();
+
     await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
     let torusFrame = await driver.findElement(By.id("torusIframe"));
     driver.switchTo().frame(torusFrame);
-    console.log("opened 1 iframe");
 
-    let embeddedFrame = await driver.findElement(
-      By.css('iframe[title="Embedded browser"]', 30000)
+    let embeddedFrame = await driver.wait(
+      until.elementLocated(By.css('iframe[title="Embedded browser"]')),
+      30000
     );
     driver.switchTo().frame(embeddedFrame);
-    console.log("opened 2 iframe");
 
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//button[contains(text(), 'I already have a wallet')]")
+      ),
+      10000
+    );
     let buttonLogin = await driver.findElement(
       By.xpath("//button[contains(text(), 'I already have a wallet')]")
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", buttonLogin);
-    await driver.wait(until.elementIsVisible(buttonLogin), 10000);
     await buttonLogin.click();
 
-    let emailInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='Email']")
-    );
-    await driver.executeScript("arguments[0].scrollIntoView();", emailInput);
-    await driver.wait(until.elementIsVisible(emailInput), 10000);
-    await emailInput.sendKeys(userName);
+    await driver.wait(until.elementLocated(By.name("email")), 20000);
+    const emailInput = await driver.findElement(By.name("email"));
+    await emailInput.sendKeys(email);
 
+    await driver.wait(
+      until.elementLocated(By.xpath("//button[contains(text(), 'Sign In')]")),
+      20000
+    );
     let signInButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Sign In')]")
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", signInButton);
-    await driver.wait(until.elementIsVisible(signInButton), 10000);
     await signInButton.click();
 
+    await driver.wait(
+      until.elementLocated(By.xpath("//input[@aria-label='OTP input']")),
+      20000
+    );
     let otpInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='OTP input']")
+      By.xpath("//input[@aria-label='OTP input']")
     );
     await driver.wait(until.elementIsVisible(otpInput), 10000);
     await otpInput.sendKeys(otp);
