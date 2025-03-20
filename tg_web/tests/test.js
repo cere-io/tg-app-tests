@@ -1,5 +1,5 @@
 import { Builder, By, until } from "selenium-webdriver";
-import chrome from "selenium-webdriver/chrome";
+import chrome from "selenium-webdriver/chrome.js";
 import { expect } from "chai";
 import fs from "fs";
 import path from "path";
@@ -8,26 +8,35 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-describe("Open active quests screen", async function () {
+describe.only("Open active quests screen", async function () {
   let driver;
-  this.timeout(30000);
-
+  let userDataDir;
   before(async function () {
-    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    this.timeout(60000);
+    console.log("Create folder...");
+    userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
+    console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(options)
+      .setChromeOptions(
+        new chrome.Options()
+          .addArguments("--verbose")
+          .addArguments("--log-path=chromedriver.log")
+      )
       .build();
+    console.log("WebDriver launched!");
   });
 
   it("should show active quests screen", async function () {
+    this.timeout(20000);
     const randomNumber = Math.floor(Math.random() * 100000);
-    const userName = `veronika.filipenko+${randomNumber}@cere.io`;
+    const email = `veronika.filipenko+${randomNumber}@cere.io`;
     const otp = "555555";
 
     await driver.get(
@@ -46,37 +55,43 @@ describe("Open active quests screen", async function () {
     await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
     let torusFrame = await driver.findElement(By.id("torusIframe"));
     driver.switchTo().frame(torusFrame);
-    console.log("opened 1 iframe");
 
-    let embeddedFrame = await driver.findElement(
-      By.css('iframe[title="Embedded browser"]', 30000)
+    let embeddedFrame = await driver.wait(
+      until.elementLocated(By.css('iframe[title="Embedded browser"]')),
+      30000
     );
     driver.switchTo().frame(embeddedFrame);
-    console.log("opened 2 iframe");
 
-    let buttonLogin = await driver.findElement(
-      By.xpath("//button[contains(text(), 'I already have a wallet')]")
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//button[contains(text(), 'Create a new wallet')]")
+      ),
+      10000
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", buttonLogin);
-    await driver.wait(until.elementIsVisible(buttonLogin), 10000);
+    let buttonLogin = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Create a new wallet')]")
+    );
     await buttonLogin.click();
 
-    let emailInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='Email']")
-    );
-    await driver.executeScript("arguments[0].scrollIntoView();", emailInput);
-    await driver.wait(until.elementIsVisible(emailInput), 10000);
-    await emailInput.sendKeys(userName);
+    await driver.wait(until.elementLocated(By.name("email")), 20000);
+    const emailInput = await driver.findElement(By.name("email"));
+    await emailInput.sendKeys(email);
 
-    let signInButton = await driver.findElement(
-      By.xpath("//button[contains(text(), 'Sign In')]")
+    await driver.wait(
+      until.elementLocated(By.xpath("//button[contains(text(), 'Sign Up')]")),
+      20000
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", signInButton);
-    await driver.wait(until.elementIsVisible(signInButton), 10000);
+    let signInButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Sign Up')]")
+    );
     await signInButton.click();
 
+    await driver.wait(
+      until.elementLocated(By.xpath("//input[@aria-label='OTP input']")),
+      20000
+    );
     let otpInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='OTP input']")
+      By.xpath("//input[@aria-label='OTP input']")
     );
     await driver.wait(until.elementIsVisible(otpInput), 10000);
     await otpInput.sendKeys(otp);
@@ -84,11 +99,15 @@ describe("Open active quests screen", async function () {
     let verifyButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Verify')]")
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", verifyButton);
-    await driver.wait(until.elementIsVisible(verifyButton), 10000);
     await verifyButton.click();
 
+    let continueButton = await driver.findElement(
+      By.xpath("//button[contains(@class, 'MuiButtonBase-root')]")
+    );
+    await driver.executeScript("arguments[0].click();", continueButton);
+    console.log("clicked");
     await driver.switchTo().defaultContent();
+
     await driver.wait(until.elementLocated(By.className("t1uqjrzu")), 10000);
     const questTitle = await driver
       .findElement(By.className("t1uqjrzu"))
@@ -107,12 +126,17 @@ describe("Open active quests screen", async function () {
 
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
 
 describe("Answer on quiz questions", async function () {
   let driver;
-  this.timeout(20000);
+  let userDataDir;
   before(async function () {
     const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
@@ -127,7 +151,7 @@ describe("Answer on quiz questions", async function () {
   });
   it("should answer on quiz questions", async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
-    const userName = `veronika.filipenko+${randomNumber}@cere.io`;
+    const email = `veronika.filipenko+${randomNumber}@cere.io`;
     const otp = "555555";
     await driver.get(
       "https://telegram-viewer-app.stage.cere.io/?campaignId=120"
@@ -145,37 +169,43 @@ describe("Answer on quiz questions", async function () {
     await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
     let torusFrame = await driver.findElement(By.id("torusIframe"));
     driver.switchTo().frame(torusFrame);
-    console.log("opened 1 iframe");
 
-    let embeddedFrame = await driver.findElement(
-      By.css('iframe[title="Embedded browser"]', 30000)
+    let embeddedFrame = await driver.wait(
+      until.elementLocated(By.css('iframe[title="Embedded browser"]')),
+      30000
     );
     driver.switchTo().frame(embeddedFrame);
-    console.log("opened 2 iframe");
 
-    let buttonLogin = await driver.findElement(
-      By.xpath("//button[contains(text(), 'I already have a wallet')]")
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//button[contains(text(), 'Create a new wallet')]")
+      ),
+      10000
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", buttonLogin);
-    await driver.wait(until.elementIsVisible(buttonLogin), 10000);
+    let buttonLogin = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Create a new wallet')]")
+    );
     await buttonLogin.click();
 
-    let emailInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='Email']")
-    );
-    await driver.executeScript("arguments[0].scrollIntoView();", emailInput);
-    await driver.wait(until.elementIsVisible(emailInput), 10000);
-    await emailInput.sendKeys(userName);
+    await driver.wait(until.elementLocated(By.name("email")), 20000);
+    const emailInput = await driver.findElement(By.name("email"));
+    await emailInput.sendKeys(email);
 
-    let signInButton = await driver.findElement(
-      By.xpath("//button[contains(text(), 'Sign In')]")
+    await driver.wait(
+      until.elementLocated(By.xpath("//button[contains(text(), 'Sign Up')]")),
+      20000
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", signInButton);
-    await driver.wait(until.elementIsVisible(signInButton), 10000);
+    let signInButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Sign Up')]")
+    );
     await signInButton.click();
 
+    await driver.wait(
+      until.elementLocated(By.xpath("//input[@aria-label='OTP input']")),
+      20000
+    );
     let otpInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='OTP input']")
+      By.xpath("//input[@aria-label='OTP input']")
     );
     await driver.wait(until.elementIsVisible(otpInput), 10000);
     await otpInput.sendKeys(otp);
@@ -209,12 +239,17 @@ describe("Answer on quiz questions", async function () {
 
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
 
 describe("Open leaderboard screen", async function () {
   let driver;
-  this.timeout(20000);
+  let userDataDir;
   before(async function () {
     const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
@@ -229,7 +264,7 @@ describe("Open leaderboard screen", async function () {
   });
   it("should show leaderboard screen", async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
-    const userName = `veronika.filipenko+${randomNumber}@cere.io`;
+    const email = `veronika.filipenko+${randomNumber}@cere.io`;
     const otp = "555555";
     await driver.get(
       "https://telegram-viewer-app.stage.cere.io/?campaignId=120"
@@ -247,37 +282,43 @@ describe("Open leaderboard screen", async function () {
     await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
     let torusFrame = await driver.findElement(By.id("torusIframe"));
     driver.switchTo().frame(torusFrame);
-    console.log("opened 1 iframe");
 
-    let embeddedFrame = await driver.findElement(
-      By.css('iframe[title="Embedded browser"]', 30000)
+    let embeddedFrame = await driver.wait(
+      until.elementLocated(By.css('iframe[title="Embedded browser"]')),
+      30000
     );
     driver.switchTo().frame(embeddedFrame);
-    console.log("opened 2 iframe");
 
-    let buttonLogin = await driver.findElement(
-      By.xpath("//button[contains(text(), 'I already have a wallet')]")
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//button[contains(text(), 'Create a new wallet')]")
+      ),
+      10000
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", buttonLogin);
-    await driver.wait(until.elementIsVisible(buttonLogin), 10000);
+    let buttonLogin = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Create a new wallet')]")
+    );
     await buttonLogin.click();
 
-    let emailInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='Email']")
-    );
-    await driver.executeScript("arguments[0].scrollIntoView();", emailInput);
-    await driver.wait(until.elementIsVisible(emailInput), 10000);
-    await emailInput.sendKeys(userName);
+    await driver.wait(until.elementLocated(By.name("email")), 20000);
+    const emailInput = await driver.findElement(By.name("email"));
+    await emailInput.sendKeys(email);
 
-    let signInButton = await driver.findElement(
-      By.xpath("//button[contains(text(), 'Sign In')]")
+    await driver.wait(
+      until.elementLocated(By.xpath("//button[contains(text(), 'Sign Up')]")),
+      20000
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", signInButton);
-    await driver.wait(until.elementIsVisible(signInButton), 10000);
+    let signInButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Sign Up')]")
+    );
     await signInButton.click();
 
+    await driver.wait(
+      until.elementLocated(By.xpath("//input[@aria-label='OTP input']")),
+      20000
+    );
     let otpInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='OTP input']")
+      By.xpath("//input[@aria-label='OTP input']")
     );
     await driver.wait(until.elementIsVisible(otpInput), 10000);
     await otpInput.sendKeys(otp);
@@ -321,12 +362,17 @@ describe("Open leaderboard screen", async function () {
   });
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
 
 describe("Open library screen", async function () {
   let driver;
-  this.timeout(20000);
+  let userDataDir;
   before(async function () {
     const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
@@ -341,7 +387,7 @@ describe("Open library screen", async function () {
   });
   it("should show library screen", async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
-    const userName = `veronika.filipenko+${randomNumber}@cere.io`;
+    const email = `veronika.filipenko+${randomNumber}@cere.io`;
     const otp = "555555";
     await driver.get(
       "https://telegram-viewer-app.stage.cere.io/?campaignId=120"
@@ -359,37 +405,43 @@ describe("Open library screen", async function () {
     await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
     let torusFrame = await driver.findElement(By.id("torusIframe"));
     driver.switchTo().frame(torusFrame);
-    console.log("opened 1 iframe");
 
-    let embeddedFrame = await driver.findElement(
-      By.css('iframe[title="Embedded browser"]', 30000)
+    let embeddedFrame = await driver.wait(
+      until.elementLocated(By.css('iframe[title="Embedded browser"]')),
+      30000
     );
     driver.switchTo().frame(embeddedFrame);
-    console.log("opened 2 iframe");
 
-    let buttonLogin = await driver.findElement(
-      By.xpath("//button[contains(text(), 'I already have a wallet')]")
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//button[contains(text(), 'Create a new wallet')]")
+      ),
+      10000
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", buttonLogin);
-    await driver.wait(until.elementIsVisible(buttonLogin), 10000);
+    let buttonLogin = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Create a new wallet')]")
+    );
     await buttonLogin.click();
 
-    let emailInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='Email']")
-    );
-    await driver.executeScript("arguments[0].scrollIntoView();", emailInput);
-    await driver.wait(until.elementIsVisible(emailInput), 10000);
-    await emailInput.sendKeys(userName);
+    await driver.wait(until.elementLocated(By.name("email")), 20000);
+    const emailInput = await driver.findElement(By.name("email"));
+    await emailInput.sendKeys(email);
 
-    let signInButton = await driver.findElement(
-      By.xpath("//button[contains(text(), 'Sign In')]")
+    await driver.wait(
+      until.elementLocated(By.xpath("//button[contains(text(), 'Sign Up')]")),
+      20000
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", signInButton);
-    await driver.wait(until.elementIsVisible(signInButton), 10000);
+    let signInButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Sign Up')]")
+    );
     await signInButton.click();
 
+    await driver.wait(
+      until.elementLocated(By.xpath("//input[@aria-label='OTP input']")),
+      20000
+    );
     let otpInput = await driver.findElement(
-      By.xpath("//input[@type='text' and @name='OTP input']")
+      By.xpath("//input[@aria-label='OTP input']")
     );
     await driver.wait(until.elementIsVisible(otpInput), 10000);
     await otpInput.sendKeys(otp);
@@ -419,5 +471,10 @@ describe("Open library screen", async function () {
   });
   after(async function () {
     await driver.quit();
+
+    if (fs.existsSync(userDataDir)) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
+      console.log(`Deleted Chrome profile: ${userDataDir}`);
+    }
   });
 });
