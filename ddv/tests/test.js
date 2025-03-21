@@ -11,6 +11,7 @@ const __dirname = path.dirname(__filename);
 describe("Load data", function () {
   let driver;
   let userDataDir;
+
   before(async function () {
     this.timeout(60000);
     console.log("Create folder...");
@@ -24,15 +25,14 @@ describe("Load data", function () {
     options.addArguments("--no-sandbox");
     options.addArguments("--disable-dev-shm-usage");
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    options.addArguments("--window-size=1920,1080");
+    options.addArguments("--remote-debugging-port=9222");
+    options.addArguments("--disable-blink-features=AutomationControlled");
     console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(
-        new chrome.Options()
-          .addArguments("--verbose")
-          .addArguments("--log-path=chromedriver.log")
-      )
+      .setChromeOptions(options)
       .build();
     console.log("WebDriver launched!");
   });
@@ -47,13 +47,13 @@ describe("Load data", function () {
 
     await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
     let torusFrame = await driver.findElement(By.id("torusIframe"));
-    driver.switchTo().frame(torusFrame);
+    await driver.switchTo().frame(torusFrame);
 
     let embeddedFrame = await driver.wait(
       until.elementLocated(By.css('iframe[title="Embedded browser"]')),
       30000
     );
-    driver.switchTo().frame(embeddedFrame);
+    await driver.switchTo().frame(embeddedFrame);
 
     await driver.wait(
       until.elementLocated(
@@ -111,9 +111,9 @@ describe("Load data", function () {
     await driver.wait(until.elementLocated(By.className("b138ry0w")), 200000);
     await driver.findElement(By.className("b138ry0w")).click();
   });
+
   after(async function () {
     await driver.quit();
-
     if (fs.existsSync(userDataDir)) {
       fs.rmSync(userDataDir, { recursive: true, force: true });
       console.log(`Deleted Chrome profile: ${userDataDir}`);
