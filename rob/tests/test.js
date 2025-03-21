@@ -19,16 +19,19 @@ describe("Create new campaign", async function () {
     console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
+    options.addArguments("--headless=new");
+    options.addArguments("--disable-gpu");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    options.addArguments("--window-size=1920,1080");
+    options.addArguments("--remote-debugging-port=9222");
+    options.addArguments("--disable-blink-features=AutomationControlled");
     console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(
-        new chrome.Options()
-          .addArguments("--verbose")
-          .addArguments("--log-path=chromedriver.log")
-      )
+      .setChromeOptions(options)
       .build();
     console.log("WebDriver launched!");
   });
@@ -90,16 +93,19 @@ describe("Create new template", async function () {
     console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
+    options.addArguments("--headless=new");
+    options.addArguments("--disable-gpu");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    options.addArguments("--window-size=1920,1080");
+    options.addArguments("--remote-debugging-port=9222");
+    options.addArguments("--disable-blink-features=AutomationControlled");
     console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(
-        new chrome.Options()
-          .addArguments("--verbose")
-          .addArguments("--log-path=chromedriver.log")
-      )
+      .setChromeOptions(options)
       .build();
     console.log("WebDriver launched!");
   });
@@ -196,16 +202,19 @@ describe("Create new event trigger", async function () {
     console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
+    options.addArguments("--headless=new");
+    options.addArguments("--disable-gpu");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    options.addArguments("--window-size=1920,1080");
+    options.addArguments("--remote-debugging-port=9222");
+    options.addArguments("--disable-blink-features=AutomationControlled");
     console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(
-        new chrome.Options()
-          .addArguments("--verbose")
-          .addArguments("--log-path=chromedriver.log")
-      )
+      .setChromeOptions(options)
       .build();
     console.log("WebDriver launched!");
   });
@@ -258,16 +267,19 @@ describe("Create new engagement", async function () {
     console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
+    options.addArguments("--headless=new");
+    options.addArguments("--disable-gpu");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    options.addArguments("--window-size=1920,1080");
+    options.addArguments("--remote-debugging-port=9222");
+    options.addArguments("--disable-blink-features=AutomationControlled");
     console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(
-        new chrome.Options()
-          .addArguments("--verbose")
-          .addArguments("--log-path=chromedriver.log")
-      )
+      .setChromeOptions(options)
       .build();
     console.log("WebDriver launched!");
   });
@@ -359,16 +371,19 @@ describe("Create new campaign negative case", async function () {
     console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
+    options.addArguments("--headless=new");
+    options.addArguments("--disable-gpu");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    options.addArguments("--window-size=1920,1080");
+    options.addArguments("--remote-debugging-port=9222");
+    options.addArguments("--disable-blink-features=AutomationControlled");
     console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(
-        new chrome.Options()
-          .addArguments("--verbose")
-          .addArguments("--log-path=chromedriver.log")
-      )
+      .setChromeOptions(options)
       .build();
     console.log("WebDriver launched!");
   });
@@ -419,16 +434,19 @@ describe("Create new event trigger negative case", async function () {
     console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
+    options.addArguments("--headless=new");
+    options.addArguments("--disable-gpu");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    options.addArguments("--window-size=1920,1080");
+    options.addArguments("--remote-debugging-port=9222");
+    options.addArguments("--disable-blink-features=AutomationControlled");
     console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(
-        new chrome.Options()
-          .addArguments("--verbose")
-          .addArguments("--log-path=chromedriver.log")
-      )
+      .setChromeOptions(options)
       .build();
     console.log("WebDriver launched!");
   });
