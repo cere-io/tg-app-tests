@@ -119,6 +119,7 @@ describe("Load data", function () {
       console.log(`Deleted Chrome profile: ${userDataDir}`);
     }
   });
+  console.log("Test Load data passed");
 });
 
 describe("Load data negative case", async function () {
@@ -127,24 +128,28 @@ describe("Load data negative case", async function () {
   before(async function () {
     this.timeout(60000);
     console.log("Create folder...");
-    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
     console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
+    options.addArguments("--headless=new");
+    options.addArguments("--disable-gpu");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    options.addArguments("--window-size=1920,1080");
+    options.addArguments("--remote-debugging-port=9222");
+    options.addArguments("--disable-blink-features=AutomationControlled");
     console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(
-        new chrome.Options()
-          .addArguments("--verbose")
-          .addArguments("--log-path=chromedriver.log")
-      )
+      .setChromeOptions(options)
       .build();
     console.log("WebDriver launched!");
   });
+
   it("should show an error", async function () {
     this.timeout(20000);
     const email = "veronika.filipenko@cere.io";
@@ -244,4 +249,5 @@ describe("Load data negative case", async function () {
       console.log(`Deleted Chrome profile: ${userDataDir}`);
     }
   });
+  console.log("Test Load data negative case passed");
 });
