@@ -110,6 +110,7 @@ describe("Load data", function () {
 
     await driver.wait(until.elementLocated(By.className("b138ry0w")), 200000);
     await driver.findElement(By.className("b138ry0w")).click();
+    console.log("Test Load data passed");
   });
 
   after(async function () {
@@ -119,7 +120,6 @@ describe("Load data", function () {
       console.log(`Deleted Chrome profile: ${userDataDir}`);
     }
   });
-  console.log("Test Load data passed");
 });
 
 describe("Load data negative case", async function () {
@@ -240,14 +240,14 @@ describe("Load data negative case", async function () {
     expect(errorMessage).to.include(
       "The request of loading data has failed, or no data found in the DDC"
     );
+    console.log("Test Load data negative case passed");
   });
-  after(async function () {
-    await driver.quit();
+});
+after(async function () {
+  await driver.quit();
 
-    if (fs.existsSync(userDataDir)) {
-      fs.rmSync(userDataDir, { recursive: true, force: true });
-      console.log(`Deleted Chrome profile: ${userDataDir}`);
-    }
-  });
-  console.log("Test Load data negative case passed");
+  if (fs.existsSync(userDataDir)) {
+    fs.rmSync(userDataDir, { recursive: true, force: true });
+    console.log(`Deleted Chrome profile: ${userDataDir}`);
+  }
 });

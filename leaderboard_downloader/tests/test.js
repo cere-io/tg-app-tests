@@ -118,6 +118,7 @@ describe("Download csv file for existing campaign", async function () {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
     console.log("File was downloaded!");
+    console.log("Test Download csv file for existing campaign passed");
   });
   after(async function () {
     await driver.quit();
@@ -127,7 +128,6 @@ describe("Download csv file for existing campaign", async function () {
       console.log(`Deleted Chrome profile: ${userDataDir}`);
     }
   });
-  console.log("Test Download csv file for existing campaign passed");
 });
 
 describe("Download csv file for NOT existing campaign", async function () {
@@ -233,6 +233,7 @@ describe("Download csv file for NOT existing campaign", async function () {
       .findElement(By.className("error_text"))
       .getText();
     expect(errorMessage).to.equal("Please, enter valid campaign id");
+    console.log("Test Download csv file for NOT existing campaign passed");
   });
   after(async function () {
     await driver.quit();
@@ -242,5 +243,4 @@ describe("Download csv file for NOT existing campaign", async function () {
       console.log(`Deleted Chrome profile: ${userDataDir}`);
     }
   });
-  console.log("Test Download csv file for NOT existing campaign passed");
 });
