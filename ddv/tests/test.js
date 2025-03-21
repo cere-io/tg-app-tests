@@ -117,7 +117,7 @@ describe("Load data", function () {
   });
 });
 
-describe.only("Load data negative case", async function () {
+describe("Load data negative case", async function () {
   let driver;
   let userDataDir;
   before(async function () {
