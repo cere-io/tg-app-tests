@@ -71,6 +71,7 @@ describe("Create new campaign", async function () {
       .click();
     await driver.findElement(By.id("status")).click();
     await driver.findElement(By.id("appCreateButton")).click();
+    console.log("Test Create new campaign passed");
   });
   after(async function () {
     await driver.quit();
@@ -124,11 +125,16 @@ describe("Create new template", async function () {
     expect(welcomeMessage).to.equal(`Hello ${userName}`);
 
     await driver.findElement(By.id("menu-WidgetTemplate")).click();
-    await driver
-      .findElement(
-        By.id("add_new_template") //doesn't work, need to add id for this button
-      )
-      .click();
+    await driver.wait(
+      until.elementLocated(By.xpath("//span[contains(text(), 'Add new')]")),
+      10000
+    );
+
+    let addNew = await driver.findElement(
+      By.xpath("//span[contains(text(), 'Add new')]")
+    );
+
+    await addNew.click();
 
     const templateName = "Autotests template";
     const htmlRaw = `<!DOCTYPE html>
@@ -174,12 +180,27 @@ describe("Create new template", async function () {
 </body>
 </html>`;
 
-    await driver.findElement(By.name("name")).sendKeys(templateName);
-    await driver
-      .findElement(By.className(" CodeMirror-line "))
-      .sendKeys(htmlRaw);
+    await driver.wait(until.elementLocated(By.name("name")), 10000);
+    let nameField = await driver.findElement(By.name("name"));
+    await nameField.sendKeys(templateName);
 
-    await driver.findElement(By.className("create_new")).click(); //doesn't work, need to add id for this button
+    await driver.wait(
+      until.elementLocated(By.xpath("//span[contains(text(), 'Create')]")),
+      10000
+    );
+    let createNew = await driver.findElement(
+      By.xpath("//span[contains(text(), 'Create')]")
+    );
+    await createNew.click();
+
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//td[contains(text(), 'Autotests template')]")
+      ),
+      10000
+    );
+
+    console.log("Test Create new template passed");
   });
   after(async function () {
     await driver.quit();
@@ -243,8 +264,7 @@ describe("Create new event trigger", async function () {
     await driver.findElement(By.id("app_id")).sendKeys("Veronicas test app");
     await driver.findElement(By.id("submit")).click();
 
-    // add here check that trigger was created
-    // add here delete trigger
+    console.log("Test Create new event trigger passed");
   });
   after(async function () {
     await driver.quit();
@@ -347,8 +367,7 @@ describe("Create new engagement", async function () {
 
     await driver.findElement(By.id("save_and_exit")).click(); //doesn't work, need to add id for this button
 
-    // add here check that engagement was created
-    // add here delete engagement
+    console.log("Test Create new engagement passed");
   });
   after(async function () {
     await driver.quit();
@@ -410,8 +429,7 @@ describe("Create new campaign negative case", async function () {
       .getText();
     expect(errorMessage).to.equal("This field is required.");
 
-    // add here check that campaign was created
-    // add archive created campaign
+    console.log("Test Create new campaign negative case passed");
   });
   after(async function () {
     await driver.quit();
@@ -472,8 +490,8 @@ describe("Create new event trigger negative case", async function () {
       .findElement(By.className("error"))
       .getText();
     expect(errorMessage).to.equal("This field is required.");
-    // add here check that trigger was created
-    // add here delete trigger
+
+    console.log("Test Create new event trigger negative case passed");
   });
   after(async function () {
     await driver.quit();

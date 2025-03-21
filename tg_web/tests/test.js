@@ -124,6 +124,7 @@ describe("Open active quests screen", async function () {
       .findElement(By.className("tgui-e6658d0b8927f95e"))
       .getText();
     expect(questTab).to.equal("Active Quests");
+    console.log("Test Open active quests screen passed");
   });
 
   after(async function () {
@@ -249,6 +250,7 @@ describe("Answer on quiz questions", async function () {
       )
       .getText();
     expect(quizTitle).to.equal("Crypto Knowledge Check");
+    console.log("Test Answer on quiz questions passed");
   });
 
   after(async function () {
@@ -385,6 +387,7 @@ describe("Open leaderboard screen", async function () {
     expect(leaderboardResult).to.equal(
       "1 out of 3 tasks completed – Could do better"
     );
+    console.log("Test Open leaderboard screen passed");
   });
   after(async function () {
     await driver.quit();
@@ -506,6 +509,7 @@ describe("Open library screen", async function () {
       .findElement(By.className("tgui-72c2a480384c4fb1"))
       .getText();
     expect(libraryTitle).to.equal("Library");
+    console.log("Test Open library screen passed");
   });
   after(async function () {
     await driver.quit();
