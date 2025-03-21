@@ -19,20 +19,22 @@ describe("Open active quests screen", async function () {
     console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
+    options.addArguments("--headless=new");
+    options.addArguments("--disable-gpu");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    options.addArguments("--window-size=1920,1080");
+    options.addArguments("--remote-debugging-port=9222");
+    options.addArguments("--disable-blink-features=AutomationControlled");
     console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
-      .setChromeOptions(
-        new chrome.Options()
-          .addArguments("--verbose")
-          .addArguments("--log-path=chromedriver.log")
-      )
+      .setChromeOptions(options)
       .build();
     console.log("WebDriver launched!");
   });
-
   it("should show active quests screen", async function () {
     this.timeout(20000);
     const randomNumber = Math.floor(Math.random() * 100000);
@@ -138,16 +140,28 @@ describe("Answer on quiz questions", async function () {
   let driver;
   let userDataDir;
   before(async function () {
-    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    this.timeout(60000);
+    console.log("Create folder...");
+    userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
+    console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
+    options.addArguments("--headless=new");
+    options.addArguments("--disable-gpu");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    options.addArguments("--window-size=1920,1080");
+    options.addArguments("--remote-debugging-port=9222");
+    options.addArguments("--disable-blink-features=AutomationControlled");
+    console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
       .setChromeOptions(options)
       .build();
+    console.log("WebDriver launched!");
   });
   it("should answer on quiz questions", async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
@@ -251,16 +265,28 @@ describe("Open leaderboard screen", async function () {
   let driver;
   let userDataDir;
   before(async function () {
-    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    this.timeout(60000);
+    console.log("Create folder...");
+    userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
+    console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
+    options.addArguments("--headless=new");
+    options.addArguments("--disable-gpu");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    options.addArguments("--window-size=1920,1080");
+    options.addArguments("--remote-debugging-port=9222");
+    options.addArguments("--disable-blink-features=AutomationControlled");
+    console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
       .setChromeOptions(options)
       .build();
+    console.log("WebDriver launched!");
   });
   it("should show leaderboard screen", async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
@@ -374,16 +400,28 @@ describe("Open library screen", async function () {
   let driver;
   let userDataDir;
   before(async function () {
-    const userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
+    this.timeout(60000);
+    console.log("Create folder...");
+    userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
+    console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
+    options.addArguments("--headless=new");
+    options.addArguments("--disable-gpu");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
     options.addArguments(`--user-data-dir=${userDataDir}`);
+    options.addArguments("--window-size=1920,1080");
+    options.addArguments("--remote-debugging-port=9222");
+    options.addArguments("--disable-blink-features=AutomationControlled");
+    console.log("Launch WebDriver...");
 
     driver = await new Builder()
       .forBrowser("chrome")
       .setChromeOptions(options)
       .build();
+    console.log("WebDriver launched!");
   });
   it("should show library screen", async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
