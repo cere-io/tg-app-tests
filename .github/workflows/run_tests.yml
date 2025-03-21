@@ -30,21 +30,10 @@ jobs:
       - name: Verify Chrome installation
         run: google-chrome --version
 
-      - name: Install Chrome WebDriver
-        run: |
-          CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
-          echo "Detected Chrome version: $CHROME_VERSION"
-          sudo apt-get install -y unzip
-          DRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION" || curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
-          if [ -z "$DRIVER_VERSION" ]; then
-            echo "ChromeDriver version for $CHROME_VERSION not found!"
-            exit 1
-          fi
-          echo "Downloading ChromeDriver version: $DRIVER_VERSION"
-          wget -q "https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip"
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/
-          chmod +x /usr/local/bin/chromedriver
+      - name: Set up ChromeDriver
+        uses: actions/setup-chromedriver@v2
+        with:
+          chrome-version: "latest"
 
       - name: Clean npm cache
         run: npm cache clean --force
