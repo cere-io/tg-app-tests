@@ -31,9 +31,9 @@ jobs:
         run: google-chrome --version
 
       - name: Set up ChromeDriver
-        uses: actions/setup-chromedriver@v2
+        uses: GoogleChrome/setup-chromedriver@v2
         with:
-          chrome-version: "latest"
+          chromedriver-version: "latest"
 
       - name: Clean npm cache
         run: npm cache clean --force
