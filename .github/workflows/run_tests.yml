@@ -31,7 +31,7 @@ jobs:
         run: google-chrome --version
 
       - name: Set up ChromeDriver
-        uses: GoogleChrome/setup-chromedriver@v2
+        uses: googlechromelabs/setup-chromedriver@v2
         with:
           chromedriver-version: "latest"
 
