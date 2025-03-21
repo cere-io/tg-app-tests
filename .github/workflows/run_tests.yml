@@ -35,7 +35,7 @@ jobs:
           CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
           echo "Detected Chrome version: $CHROME_VERSION"
           sudo apt-get install -y unzip
-          DRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION)
+          DRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION" || curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
           if [ -z "$DRIVER_VERSION" ]; then
             echo "ChromeDriver version for $CHROME_VERSION not found!"
             exit 1
