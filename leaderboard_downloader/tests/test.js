@@ -4,6 +4,9 @@ import { expect } from "chai";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { path as chromedriverPath } from "chromedriver";
+
+console.log("Use chromedriver:", chromedriverPath);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,11 +32,17 @@ describe("Download csv file for existing campaign", async function () {
     options.addArguments("--disable-blink-features=AutomationControlled");
     console.log("Launch WebDriver...");
 
-    driver = await new Builder()
-      .forBrowser("chrome")
-      .setChromeOptions(options)
-      .build();
-    console.log("WebDriver launched!");
+    try {
+      driver = await new Builder()
+        .forBrowser("chrome")
+        .setChromeOptions(options)
+        .build();
+      console.log("WebDriver launched!");
+    } catch (error) {
+      console.error("Failed to launch WebDriver:", error);
+      console.error(error.stack);
+      throw error;
+    }
   });
   it("should download csv file", async function () {
     this.timeout(20000);
@@ -123,10 +132,12 @@ describe("Download csv file for existing campaign", async function () {
   after(async function () {
     await driver.quit();
 
-    if (fs.existsSync(userDataDir)) {
-      fs.rmSync(userDataDir, { recursive: true, force: true });
-      console.log(`Deleted Chrome profile: ${userDataDir}`);
-    }
+    setTimeout(() => {
+      if (fs.existsSync(userDataDir)) {
+        fs.rmSync(userDataDir, { recursive: true, force: true });
+        console.log(`Deleted Chrome profile: ${userDataDir}`);
+      }
+    }, 5000);
   });
 });
 
@@ -151,11 +162,17 @@ describe("Download csv file for NOT existing campaign", async function () {
     options.addArguments("--disable-blink-features=AutomationControlled");
     console.log("Launch WebDriver...");
 
-    driver = await new Builder()
-      .forBrowser("chrome")
-      .setChromeOptions(options)
-      .build();
-    console.log("WebDriver launched!");
+    try {
+      driver = await new Builder()
+        .forBrowser("chrome")
+        .setChromeOptions(options)
+        .build();
+      console.log("WebDriver launched!");
+    } catch (error) {
+      console.error("Failed to launch WebDriver:", error);
+      console.error(error.stack);
+      throw error;
+    }
   });
   it("should show an error", async function () {
     this.timeout(20000);
@@ -238,9 +255,11 @@ describe("Download csv file for NOT existing campaign", async function () {
   after(async function () {
     await driver.quit();
 
-    if (fs.existsSync(userDataDir)) {
-      fs.rmSync(userDataDir, { recursive: true, force: true });
-      console.log(`Deleted Chrome profile: ${userDataDir}`);
-    }
+    setTimeout(() => {
+      if (fs.existsSync(userDataDir)) {
+        fs.rmSync(userDataDir, { recursive: true, force: true });
+        console.log(`Deleted Chrome profile: ${userDataDir}`);
+      }
+    }, 5000);
   });
 });

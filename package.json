@@ -18,11 +18,11 @@
     "test": "mocha **/tests/**/*.js"
   },
   "devDependencies": {
-    "chai": "^5.1.2",
-    "chromedriver": "^134.0.3",
+    "chai": "^5.2.0",
+    "chromedriver": "^134.0.5",
     "geckodriver": "^5.0.0",
-    "mocha": "^10.8.2",
-    "selenium-webdriver": "^4.28.1"
+    "mocha": "^11.1.0",
+    "selenium-webdriver": "^4.30.0"
   },
   "dependencies": {
     "glob": "^11.0.1"

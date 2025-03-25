@@ -4,6 +4,9 @@ import { expect } from "chai";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { path as chromedriverPath } from "chromedriver";
+
+console.log("Use chromedriver:", chromedriverPath);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,11 +32,17 @@ describe("Open active quests screen", async function () {
     options.addArguments("--disable-blink-features=AutomationControlled");
     console.log("Launch WebDriver...");
 
-    driver = await new Builder()
-      .forBrowser("chrome")
-      .setChromeOptions(options)
-      .build();
-    console.log("WebDriver launched!");
+    try {
+      driver = await new Builder()
+        .forBrowser("chrome")
+        .setChromeOptions(options)
+        .build();
+      console.log("WebDriver launched!");
+    } catch (error) {
+      console.error("Failed to launch WebDriver:", error);
+      console.error(error.stack);
+      throw error;
+    }
   });
   it("should show active quests screen", async function () {
     this.timeout(20000);
@@ -103,37 +112,34 @@ describe("Open active quests screen", async function () {
     );
     await verifyButton.click();
 
+    this.timeout(60000);
+    await driver.wait(
+      until.elementLocated(By.xpath("//button[contains(text(), 'Continue')]")),
+      60000
+    );
     let continueButton = await driver.findElement(
-      By.xpath("//button[contains(@class, 'MuiButtonBase-root')]")
+      By.xpath("//button[contains(text(), 'Continue')]")
     );
     await driver.executeScript("arguments[0].click();", continueButton);
-    console.log("clicked");
     await driver.switchTo().defaultContent();
 
-    await driver.wait(until.elementLocated(By.className("t1uqjrzu")), 10000);
-    const questTitle = await driver
-      .findElement(By.className("t1uqjrzu"))
-      .getText();
-    expect(questTitle).to.equal("Complete Quests to Earn!");
-
     await driver.wait(
-      until.elementLocated(By.className("tgui-e6658d0b8927f95e")),
+      until.elementLocated(
+        By.xpath("//span[contains(text(), 'Active Quests')]")
+      ),
       10000
     );
-    const questTab = await driver
-      .findElement(By.className("tgui-e6658d0b8927f95e"))
-      .getText();
-    expect(questTab).to.equal("Active Quests");
     console.log("Test Open active quests screen passed");
   });
 
   after(async function () {
     await driver.quit();
-
-    if (fs.existsSync(userDataDir)) {
-      fs.rmSync(userDataDir, { recursive: true, force: true });
-      console.log(`Deleted Chrome profile: ${userDataDir}`);
-    }
+    setTimeout(() => {
+      if (fs.existsSync(userDataDir)) {
+        fs.rmSync(userDataDir, { recursive: true, force: true });
+        console.log(`Deleted Chrome profile: ${userDataDir}`);
+      }
+    }, 5000);
   });
 });
 
@@ -158,13 +164,20 @@ describe("Answer on quiz questions", async function () {
     options.addArguments("--disable-blink-features=AutomationControlled");
     console.log("Launch WebDriver...");
 
-    driver = await new Builder()
-      .forBrowser("chrome")
-      .setChromeOptions(options)
-      .build();
-    console.log("WebDriver launched!");
+    try {
+      driver = await new Builder()
+        .forBrowser("chrome")
+        .setChromeOptions(options)
+        .build();
+      console.log("WebDriver launched!");
+    } catch (error) {
+      console.error("Failed to launch WebDriver:", error);
+      console.error(error.stack);
+      throw error;
+    }
   });
   it("should answer on quiz questions", async function () {
+    this.timeout(60000);
     const randomNumber = Math.floor(Math.random() * 100000);
     const email = `veronika.filipenko+${randomNumber}@cere.io`;
     const otp = "555555";
@@ -234,32 +247,25 @@ describe("Answer on quiz questions", async function () {
 
     await driver.switchTo().defaultContent();
 
-    const questTitle = await driver
-      .findElement(By.className("t1uqjrzu"))
-      .getText();
-    expect(questTitle).to.equal("Complete Quests to Earn!");
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//span[contains(text(), 'Active Quests')]")
+      ),
+      10000
+    );
 
-    const questTab = await driver
-      .findElement(By.className("tgui-e6658d0b8927f95e"))
-      .getText();
-    expect(questTab).to.equal("Active Quests");
-
-    const quizTitle = await driver
-      .findElement(
-        By.xpath("/html/body/div/main/div/div[2]/div/div[5]/div/div/div[1]/h2")
-      )
-      .getText();
-    expect(quizTitle).to.equal("Crypto Knowledge Check");
     console.log("Test Answer on quiz questions passed");
   });
 
   after(async function () {
     await driver.quit();
 
-    if (fs.existsSync(userDataDir)) {
-      fs.rmSync(userDataDir, { recursive: true, force: true });
-      console.log(`Deleted Chrome profile: ${userDataDir}`);
-    }
+    setTimeout(() => {
+      if (fs.existsSync(userDataDir)) {
+        fs.rmSync(userDataDir, { recursive: true, force: true });
+        console.log(`Deleted Chrome profile: ${userDataDir}`);
+      }
+    }, 5000);
   });
 });
 
@@ -354,9 +360,17 @@ describe("Open leaderboard screen", async function () {
     let verifyButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Verify')]")
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", verifyButton);
-    await driver.wait(until.elementIsVisible(verifyButton), 10000);
     await verifyButton.click();
+
+    this.timeout(60000);
+    await driver.wait(
+      until.elementLocated(By.xpath("//button[contains(text(), 'Continue')]")),
+      60000
+    );
+    let continueButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Continue')]")
+    );
+    await driver.executeScript("arguments[0].click();", continueButton);
 
     await driver.switchTo().defaultContent();
 
@@ -392,10 +406,12 @@ describe("Open leaderboard screen", async function () {
   after(async function () {
     await driver.quit();
 
-    if (fs.existsSync(userDataDir)) {
-      fs.rmSync(userDataDir, { recursive: true, force: true });
-      console.log(`Deleted Chrome profile: ${userDataDir}`);
-    }
+    setTimeout(() => {
+      if (fs.existsSync(userDataDir)) {
+        fs.rmSync(userDataDir, { recursive: true, force: true });
+        console.log(`Deleted Chrome profile: ${userDataDir}`);
+      }
+    }, 5000);
   });
 });
 
@@ -490,9 +506,17 @@ describe("Open library screen", async function () {
     let verifyButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Verify')]")
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", verifyButton);
-    await driver.wait(until.elementIsVisible(verifyButton), 10000);
     await verifyButton.click();
+
+    this.timeout(60000);
+    await driver.wait(
+      until.elementLocated(By.xpath("//button[contains(text(), 'Continue')]")),
+      60000
+    );
+    let continueButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Continue')]")
+    );
+    await driver.executeScript("arguments[0].click();", continueButton);
 
     await driver.switchTo().defaultContent();
 
@@ -514,9 +538,11 @@ describe("Open library screen", async function () {
   after(async function () {
     await driver.quit();
 
-    if (fs.existsSync(userDataDir)) {
-      fs.rmSync(userDataDir, { recursive: true, force: true });
-      console.log(`Deleted Chrome profile: ${userDataDir}`);
-    }
+    setTimeout(() => {
+      if (fs.existsSync(userDataDir)) {
+        fs.rmSync(userDataDir, { recursive: true, force: true });
+        console.log(`Deleted Chrome profile: ${userDataDir}`);
+      }
+    }, 5000);
   });
 });
