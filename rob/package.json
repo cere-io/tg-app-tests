@@ -13,9 +13,9 @@
     "test": "mocha tests/**/*.js"
   },
   "devDependencies": {
-    "chai": "^5.1.2",
-    "chromedriver": "^133.0.0",
-    "mocha": "^10.8.2",
-    "selenium-webdriver": "^4.28.1"
+    "chai": "^5.2.0",
+    "chromedriver": "^134.0.5",
+    "mocha": "^11.1.0",
+    "selenium-webdriver": "^4.30.0"
   }
 }
