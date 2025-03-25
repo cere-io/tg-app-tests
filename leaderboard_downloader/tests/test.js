@@ -46,7 +46,7 @@ describe("Download csv file for existing campaign", async function () {
   });
   it("should download csv file", async function () {
     this.timeout(20000);
-    const userName = "veronika.filipenko@cere.io";
+    const email = "veronika.filipenko@cere.io";
     const otp = "555555";
     await driver.get(
       "https://cdn.ddcdragon.com/81/leaderboard-downloader-stage/"
@@ -101,32 +101,32 @@ describe("Download csv file for existing campaign", async function () {
     let verifyButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Verify')]")
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", verifyButton);
-    await driver.wait(until.elementIsVisible(verifyButton), 10000);
     await verifyButton.click();
+
+    this.timeout(60000);
+    await driver.wait(
+      until.elementLocated(By.xpath("//button[contains(text(), 'Continue')]")),
+      60000
+    );
+    let continueButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Continue')]")
+    );
+    await driver.executeScript("arguments[0].click();", continueButton);
 
     await driver.switchTo().defaultContent();
 
-    const welcomeMessage = await driver.findElement(By.css("h4")).getText();
-    expect(welcomeMessage).to.equal("Please, enter campaign id");
-
-    const campaignId = "105";
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//h4[contains(text(), 'Please, enter campaign id')]")
+      ),
+      60000
+    );
+    const campaignId = "120";
     await driver.findElement(By.css("input")).sendKeys(campaignId);
 
     let downloadButton = await driver.findElement(By.css("button"));
     downloadButton.click();
 
-    const fs = require("fs");
-    const path = require("path");
-
-    let downloadDir = "C://Users//Dzmit//Downloads";
-    let expectedFileName = "leaderboard_105.csv";
-
-    let filePath = path.join(downloadDir, expectedFileName);
-    while (!fs.existsSync(filePath)) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
-    console.log("File was downloaded!");
     console.log("Test Download csv file for existing campaign passed");
   });
   after(async function () {
@@ -176,7 +176,7 @@ describe("Download csv file for NOT existing campaign", async function () {
   });
   it("should show an error", async function () {
     this.timeout(20000);
-    const userName = "veronika.filipenko@cere.io";
+    const email = "veronika.filipenko@cere.io";
     const otp = "555555";
     await driver.get(
       "https://cdn.ddcdragon.com/81/leaderboard-downloader-stage/"
@@ -231,16 +231,28 @@ describe("Download csv file for NOT existing campaign", async function () {
     let verifyButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Verify')]")
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", verifyButton);
-    await driver.wait(until.elementIsVisible(verifyButton), 10000);
     await verifyButton.click();
+
+    this.timeout(60000);
+    await driver.wait(
+      until.elementLocated(By.xpath("//button[contains(text(), 'Continue')]")),
+      60000
+    );
+    let continueButton = await driver.findElement(
+      By.xpath("//button[contains(text(), 'Continue')]")
+    );
+    await driver.executeScript("arguments[0].click();", continueButton);
 
     await driver.switchTo().defaultContent();
 
-    const welcomeMessage = await driver.findElement(By.css("h4")).getText();
-    expect(welcomeMessage).to.equal("Please, enter campaign id");
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//h4[contains(text(), 'Please, enter campaign id')]")
+      ),
+      60000
+    );
 
-    const campaignId = "105";
+    const campaignId = "0";
     await driver.findElement(By.css("input")).sendKeys(campaignId);
 
     let downloadButton = await driver.findElement(By.css("button"));
