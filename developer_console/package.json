@@ -1,0 +1,21 @@
+{
+  "name": "developer_console",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha tests/**/*.js"
+  },
+  "devDependencies": {
+    "chai": "^5.2.0",
+    "chromedriver": "^134.0.5",
+    "mocha": "^11.1.0",
+    "selenium-webdriver": "^4.30.0"
+  }
+}
