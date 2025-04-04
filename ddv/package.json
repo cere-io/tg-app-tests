@@ -10,12 +10,18 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha tests/**/*.js"
+    "test": "mocha --require @babel/register --require allure-mocha **/tests/**/*.js",
+    "report": "npx allure generate allure-results --clean && npx allure open"
   },
   "devDependencies": {
+    "@babel/core": "^7.26.10",
+    "@babel/preset-env": "^7.26.9",
+    "@babel/register": "^7.25.9",
+    "allure-commandline": "^2.33.0",
+    "allure-mocha": "^3.2.1",
     "chai": "^5.2.0",
     "chromedriver": "^134.0.5",
-    "mocha": "^11.1.0",
+    "mocha": "^11.2.0",
     "selenium-webdriver": "^4.30.0"
   }
 }
