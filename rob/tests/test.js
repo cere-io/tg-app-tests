@@ -11,7 +11,7 @@ console.log("Use chromedriver:", chromedriverPath);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-describe("Create new campaign", async function () {
+describe.only("Create new campaign", async function () {
   let driver;
   let userDataDir;
   before(async function () {
@@ -22,7 +22,7 @@ describe("Create new campaign", async function () {
     console.log("Set up ChromeOptions...");
 
     const options = new chrome.Options();
-    options.addArguments("--headless=new");
+    // options.addArguments("--headless=new");
     options.addArguments("--disable-gpu");
     options.addArguments("--no-sandbox");
     options.addArguments("--disable-dev-shm-usage");
@@ -52,6 +52,7 @@ describe("Create new campaign", async function () {
     await driver.findElement(By.name("login")).sendKeys(userName);
     await driver.findElement(By.name("password")).sendKeys(userPassword);
     await driver.findElement(By.id("adminLoginFormSubmit")).click();
+    this.timeout(20000);
 
     const welcomeMessage = await driver
       .findElement(By.id("username"))
@@ -61,25 +62,255 @@ describe("Create new campaign", async function () {
     await driver.findElement(By.id("menu-campaign")).click();
     await driver.findElement(By.id("create-campaign")).click();
 
-    const campaignName = "Autotests campaign";
-    const dateFrom = "01/01/2025";
-    const timeFrom = "09:00";
-    const dateTo = "01/01/2026";
-    const timeTo = "09:00";
-    await driver.findElement(By.name("campaign_name")).sendKeys(campaignName);
-    await driver.findElement(By.name("dateFrom")).sendKeys(dateFrom);
-    await driver.findElement(By.id("timeFrom")).sendKeys(timeFrom);
-    await driver.findElement(By.name("dateTo")).sendKeys(dateTo);
-    await driver.findElement(By.id("timeTo")).sendKeys(timeTo);
+    const randomNumber = Math.floor(Math.random() * 100000);
+    const campaignName = `Autotests campaign+${randomNumber}`;
+    const campaignDescription = `Campaign Description test+${randomNumber}`;
+
+    await driver.wait(
+      until.elementLocated(By.id("campaign-cinfigurator-iframe")),
+      30000
+    );
+    let configuratorFrame = await driver.findElement(
+      By.id("campaign-cinfigurator-iframe")
+    );
+    driver.switchTo().frame(configuratorFrame);
+
+    await driver.wait(
+      until.elementLocated(By.xpath("//h2[text()='Create Campaign']")),
+      10000
+    );
+    await driver.wait(
+      until.elementLocated(By.xpath("//span[text()='Select data services']")),
+      10000
+    );
+    const dropdown = await driver.findElement(
+      By.xpath("//span[text()='Select data services']")
+    );
+    await dropdown.click();
+
+    const option = await driver.findElement(
+      By.xpath("//div[text()='Telegram Supercharged Bot']")
+    );
+    await driver.executeScript("arguments[0].scrollIntoView(true);", option);
+    await option.click();
+    await driver.findElement(By.className("p-2")).click();
+
+    await driver.findElement(By.id("name")).sendKeys(campaignName);
+    await driver
+      .findElement(By.id("description"))
+      .sendKeys(campaignDescription);
+
+    await driver.findElement(By.xpath("//option[text()='Draft']")).click();
+    const optionStatus = await driver.findElement(
+      By.xpath("//option[text()='Active']")
+    );
+    await driver.executeScript(
+      "arguments[0].scrollIntoView(true);",
+      optionStatus
+    );
+    await optionStatus.click();
+
+    await driver.findElement(By.xpath("//button[text()='Next']")).click();
+
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//h2[text()='Configure Campaign Engagement']")
+      ),
+      10000
+    );
+
+    await driver
+      .findElement(By.xpath("//button[text()='Add Video Task']"))
+      .click();
+    await driver.wait(
+      until.elementLocated(By.xpath("//h3[text()='Create New Task']")),
+      10000
+    );
+    const videoTitle = `Video title+${randomNumber}`;
+    const videoDescription = `Video description+${randomNumber}`;
+    const videoPoints = Math.floor(Math.random() * 100);
+    const videoURL =
+      "https://cdn.testnet.cere.network/573102/baear4igpors3habtmqvmvmbdeptiudifwvpw4rwdwjwvdqqpfpbao4obhu/19757067-uhd_3840_2160_30fps.mp4?source=developer-console";
+    const thumbnailURL =
+      "https://cdn.testnet.cere.network/573102/baear4ihj64wdrmhdxdgvmles3jteydd5mtrbyxp4xy4pdww45soj7hegf4/2.jpg?source=developer-console";
+
+    await driver.findElement(By.name("title")).sendKeys(videoTitle);
+    await driver.findElement(By.name("description")).sendKeys(videoDescription);
+    await driver.findElement(By.name("points")).clear();
+    await driver.findElement(By.name("points")).sendKeys(videoPoints);
+    await driver.findElement(By.name("videoUrl")).sendKeys(videoURL);
+    await driver.findElement(By.name("thumbnailUrl")).sendKeys(thumbnailURL);
+
+    await driver
+      .findElement(By.xpath("//button[text()='Create Task']"))
+      .click();
+
+    await driver.wait(until.elementLocated(By.className("video-task")), 10000);
+
+    await driver
+      .findElement(By.xpath("//button[text()='Add Social Task']"))
+      .click();
+    await driver.wait(
+      until.elementLocated(By.xpath("//h3[text()='Create New Task']")),
+      10000
+    );
+
+    const socialTitle = `Social title+${randomNumber}`;
+    const socialDescription = `Social description+${randomNumber}`;
+    const linkToPost = "https://x.com/cerenetwork/status/1662128009988435969";
+    const socialPoints = Math.floor(Math.random() * 100);
+    const socialImage =
+      "https://cdn.testnet.cere.network/573102/baear4ig4gq5kpbtvscoo3fs47w3lvnasijooldqdh2dpv2iglpq2xhvonq/3.jpg?source=developer-console";
+    const hashtag = `hashtag+${randomNumber}`;
+
+    await driver.findElement(By.name("title")).sendKeys(socialTitle);
+    await driver
+      .findElement(By.name("description"))
+      .sendKeys(socialDescription);
+    await driver.findElement(By.name("tweetLink")).sendKeys(linkToPost);
+    await driver.findElement(By.name("points")).clear();
+    await driver.findElement(By.name("points")).sendKeys(socialPoints);
+    await driver.findElement(By.name("questImage")).sendKeys(socialImage);
+    await driver.findElement(By.css(".hashtag-input input")).sendKeys(hashtag);
+    await driver.findElement(By.xpath("//button[text()='Add']")).click();
+    await driver.wait(
+      until.elementLocated(By.className("hashtag-item")),
+      10000
+    );
+    await driver
+      .findElement(By.xpath("//button[text()='Create Task']"))
+      .click();
+
+    await driver.wait(until.elementLocated(By.className("social-task")), 10000);
+
+    await driver
+      .findElement(By.xpath("//button[text()='Add Referral Task']"))
+      .click();
+    await driver.wait(
+      until.elementLocated(By.xpath("//h3[text()='Create New Task']")),
+      10000
+    );
+
+    const referralTitle = `Referral title+${randomNumber}`;
+    const referralDescription = `Referral description+${randomNumber}`;
+    const referralPoints = Math.floor(Math.random() * 100);
+    const referralInstructions = `Referral instructions+${randomNumber}`;
+    const invitMessage = `Invitation message+${randomNumber}`;
+    const referralImage =
+      "https://cdn.testnet.cere.network/573102/baear4ig4gq5kpbtvscoo3fs47w3lvnasijooldqdh2dpv2iglpq2xhvonq/3.jpg?source=developer-console";
+
+    await driver.findElement(By.name("title")).sendKeys(referralTitle);
+    await driver
+      .findElement(By.name("description"))
+      .sendKeys(referralDescription);
+    await driver.findElement(By.name("points")).clear();
+    await driver.findElement(By.name("points")).sendKeys(referralPoints);
+    await driver
+      .findElement(By.name("instructions"))
+      .sendKeys(referralInstructions);
+    await driver.findElement(By.name("message")).sendKeys(invitMessage);
+    await driver.findElement(By.name("questImage")).sendKeys(referralImage);
+    await driver
+      .findElement(By.xpath("//button[text()='Create Task']"))
+      .click();
+
+    await driver.wait(
+      until.elementLocated(By.className("referral-task")),
+      10000
+    );
+
+    await driver.executeScript("window.scrollTo(0, 0);");
+    await driver.findElement(By.xpath("//button[text()='Add Quiz']")).click();
+    await driver.wait(
+      until.elementLocated(By.xpath("//h3[text()='Create New Task']")),
+      10000
+    );
+
+    const quizTitle = `Quiz title+${randomNumber}`;
+    const quizQuestionFirst = `Quiz question 1+${randomNumber}`;
+    const quizQuestionSecond = `Quiz question 2+${randomNumber}`;
+    const answerOptionFirst = `Option 1+${randomNumber}`;
+    const answerOptionSecond = `Option 2+${randomNumber}`;
+    const answerOptionThird = `Option 3+${randomNumber}`;
+    const answerOption4 = `Option 4+${randomNumber}`;
+    const answerOption5 = `Option 5+${randomNumber}`;
+    const answerOption6 = `Option 6+${randomNumber}`;
+
+    await driver.findElement(By.name("title")).sendKeys(quizTitle);
+    await driver
+      .findElement(By.css("input.w-full.p-2.border.rounded"))
+      .sendKeys(quizQuestionFirst);
+    await driver
+      .findElement(By.css("textarea.flex-1.p-2.border.rounded"))
+      .sendKeys(answerOptionFirst);
     await driver
       .findElement(
-        By.xpath(
-          "/html/body/div[2]/div[1]/div/div/form/fieldset[7]/div/select/option"
-        )
+        By.xpath('(//textarea[@placeholder="Answer option text"])[2]')
       )
+      .sendKeys(answerOptionSecond);
+    await driver.findElement(By.xpath("//button[text()='Add option']")).click();
+    await driver
+      .findElement(
+        By.xpath('(//textarea[@placeholder="Answer option text"])[3]')
+      )
+      .sendKeys(answerOptionThird);
+    await driver
+      .findElement(By.xpath("//button[text()='Add question']"))
       .click();
-    await driver.findElement(By.id("status")).click();
-    await driver.findElement(By.id("appCreateButton")).click();
+
+    await driver
+      .findElement(By.css("input.w-full.p-2.border.rounded"))
+      .sendKeys(quizQuestionSecond);
+    await driver
+      .findElement(By.css("textarea.flex-1.p-2.border.rounded"))
+      .sendKeys(answerOption4);
+    await driver
+      .findElement(
+        By.xpath('(//textarea[@placeholder="Answer option text"])[2]')
+      )
+      .sendKeys(answerOption5);
+    await driver.findElement(By.xpath("//button[text()='Add option']")).click();
+    await driver
+      .findElement(
+        By.xpath('(//textarea[@placeholder="Answer option text"])[3]')
+      )
+      .sendKeys(answerOption6);
+
+    await driver
+      .findElement(By.xpath("//button[text()='Create Task']"))
+      .click();
+
+    await driver.wait(
+      until.elementLocated(By.xpath("//span[text()='Type: Quiz']")),
+      10000
+    );
+
+    await driver.findElement(By.xpath("//button[text()='Continue']")).click();
+
+    await driver.wait(
+      until.elementLocated(By.xpath("//h3[text()='Engagement Tasks']")),
+      10000
+    );
+
+    await driver
+      .findElement(By.xpath("//button[text()='Create Campaign']"))
+      .click();
+
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//h3[text()='Campaign Submitted Successfully']")
+      ),
+      10000
+    );
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//p[text()='New campaign has been created successfully.']")
+      ),
+      10000
+    );
+    await driver.switchTo().defaultContent();
+
+    await driver.findElement(By.id("menu-campaign")).click();
     console.log("Test Create new campaign passed");
   });
   after(async function () {

@@ -146,6 +146,7 @@ describe("Sign up with new account", async function () {
 
     console.log("Test Sign up with new account passed");
   });
+
   after(async function () {
     await driver.quit();
 

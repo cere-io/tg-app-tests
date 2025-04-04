@@ -14,6 +14,7 @@
     "report": "npx allure generate allure-results --clean && npx allure open"
   },
   "devDependencies": {
+    "@babel/register": "^7.25.9",
     "allure-commandline": "^2.33.0",
     "allure-mocha": "^3.2.1",
     "chai": "^5.2.0",
