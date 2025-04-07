@@ -10,7 +10,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha --reporter allure-mocha --require @babel/register **/tests/**/*.js",
+    "test": "mocha --reporter allure-mocha --require @babel/register --exit **/tests/**/*.js",
     "report": "npx allure generate allure-results --clean && npx allure open"
   },
   "devDependencies": {
