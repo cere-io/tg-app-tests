@@ -34,7 +34,7 @@ jobs:
 
       - name: Install matching chromedriver
         run: |
-          CHROME_VERSION=$(google-chrome --version | grep -oP "\d+\.\d+\.\d+" | head -1)
+          CHROME_VERSION=$(google-chrome --version | grep -oP "\d+" | head -1)
           echo "Detected Chrome version: $CHROME_VERSION"
           npm install chromedriver@$CHROME_VERSION
 
