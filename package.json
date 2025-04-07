@@ -25,10 +25,10 @@
     "allure-commandline": "^2.33.0",
     "allure-mocha": "^3.2.1",
     "chai": "^5.2.0",
-    "chromedriver": "^134.0.5",
+    "chromedriver": "^135.0.0",
     "geckodriver": "^5.0.0",
     "mocha": "^11.1.0",
-    "selenium-webdriver": "^4.30.0"
+    "selenium-webdriver": "^4.31.0"
   },
   "dependencies": {
     "glob": "^11.0.1"
