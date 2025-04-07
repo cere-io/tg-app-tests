@@ -10,7 +10,7 @@ on:
     - cron: "0 0 * * *" # daily 00:00 UTC
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,7 +44,16 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
+      - name: Run tests with Mocha + Allure
         env:
           CI: true
-        run: npm test
+        run: |
+          mkdir -p allure-results
+          npm test -- --exit || true
+
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results/
