@@ -1,70 +1,70 @@
-import { Builder, By, until } from "selenium-webdriver";
-import chrome from "selenium-webdriver/chrome.js";
-import { expect } from "chai";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { path as chromedriverPath } from "chromedriver";
+import { Builder, By, until } from 'selenium-webdriver';
+import chrome from 'selenium-webdriver/chrome.js';
+import { expect } from 'chai';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { path as chromedriverPath } from 'chromedriver';
 
-console.log("Use chromedriver:", chromedriverPath);
+console.log('Use chromedriver:', chromedriverPath);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-describe("Open active quests screen", async function () {
+describe('Open active quests screen', async function () {
   let driver;
   let userDataDir;
   before(async function () {
     this.timeout(60000);
-    console.log("Create folder...");
+    console.log('Create folder...');
     userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
-    console.log("Set up ChromeOptions...");
+    console.log('Set up ChromeOptions...');
 
     const options = new chrome.Options();
-    options.addArguments("--headless=new");
-    options.addArguments("--disable-gpu");
-    options.addArguments("--no-sandbox");
-    options.addArguments("--disable-dev-shm-usage");
+    options.addArguments('--headless=new');
+    options.addArguments('--disable-gpu');
+    options.addArguments('--no-sandbox');
+    options.addArguments('--disable-dev-shm-usage');
     options.addArguments(`--user-data-dir=${userDataDir}`);
-    options.addArguments("--window-size=1920,1080");
-    options.addArguments("--remote-debugging-port=9222");
-    options.addArguments("--disable-blink-features=AutomationControlled");
-    console.log("Launch WebDriver...");
+    options.addArguments('--window-size=1920,1080');
+    options.addArguments('--remote-debugging-port=9222');
+    options.addArguments('--disable-blink-features=AutomationControlled');
+    console.log('Launch WebDriver...');
 
     try {
       driver = await new Builder()
-        .forBrowser("chrome")
+        .forBrowser('chrome')
         .setChromeOptions(options)
         .build();
-      console.log("WebDriver launched!");
+      console.log('WebDriver launched!');
     } catch (error) {
-      console.error("Failed to launch WebDriver:", error);
+      console.error('Failed to launch WebDriver:', error);
       console.error(error.stack);
       throw error;
     }
   });
-  it("should show active quests screen", async function () {
+  it('should show active quests screen', async function () {
     this.timeout(20000);
     const randomNumber = Math.floor(Math.random() * 100000);
     const email = `veronika.filipenko+${randomNumber}@cere.io`;
-    const otp = "555555";
+    const otp = '555555';
 
     await driver.get(
-      "https://telegram-viewer-app.stage.cere.io/?campaignId=120"
+      'https://telegram-viewer-app.stage.cere.io/?campaignId=120'
     );
 
-    await driver.wait(until.elementLocated(By.className("hero-title")), 10000);
+    await driver.wait(until.elementLocated(By.className('hero-title')), 10000);
     const welcomeTitle = await driver
-      .findElement(By.className("hero-title"))
+      .findElement(By.className('hero-title'))
       .getText();
-    expect(welcomeTitle).to.equal("Sit back, Enjoy, and Earn!");
+    expect(welcomeTitle).to.equal('Sit back, Enjoy, and Earn!');
 
-    await driver.findElement(By.className("tgui-bca5056bf34297b0")).click();
-    await driver.findElement(By.className("welcom-cta-text")).click();
+    await driver.findElement(By.className('tgui-bca5056bf34297b0')).click();
+    await driver.findElement(By.className('welcom-cta-text')).click();
 
-    await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
-    let torusFrame = await driver.findElement(By.id("torusIframe"));
+    await driver.wait(until.elementLocated(By.id('torusIframe')), 30000);
+    let torusFrame = await driver.findElement(By.id('torusIframe'));
     driver.switchTo().frame(torusFrame);
 
     let embeddedFrame = await driver.wait(
@@ -84,8 +84,8 @@ describe("Open active quests screen", async function () {
     );
     await buttonLogin.click();
 
-    await driver.wait(until.elementLocated(By.name("email")), 20000);
-    const emailInput = await driver.findElement(By.name("email"));
+    await driver.wait(until.elementLocated(By.name('email')), 20000);
+    const emailInput = await driver.findElement(By.name('email'));
     await emailInput.sendKeys(email);
 
     await driver.wait(
@@ -120,7 +120,7 @@ describe("Open active quests screen", async function () {
     let continueButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Continue')]")
     );
-    await driver.executeScript("arguments[0].click();", continueButton);
+    await driver.executeScript('arguments[0].click();', continueButton);
     await driver.switchTo().defaultContent();
 
     await driver.wait(
@@ -138,7 +138,7 @@ describe("Open active quests screen", async function () {
       10000
     );
 
-    console.log("Test Open active quests screen passed");
+    console.log('Test Open active quests screen passed');
   });
 
   after(async function () {
@@ -152,59 +152,59 @@ describe("Open active quests screen", async function () {
   });
 });
 
-describe("Answer on quiz questions", async function () {
+describe('Answer on quiz questions', async function () {
   let driver;
   let userDataDir;
   before(async function () {
     this.timeout(60000);
-    console.log("Create folder...");
+    console.log('Create folder...');
     userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
-    console.log("Set up ChromeOptions...");
+    console.log('Set up ChromeOptions...');
 
     const options = new chrome.Options();
-    options.addArguments("--headless=new");
-    options.addArguments("--disable-gpu");
-    options.addArguments("--no-sandbox");
-    options.addArguments("--disable-dev-shm-usage");
+    options.addArguments('--headless=new');
+    options.addArguments('--disable-gpu');
+    options.addArguments('--no-sandbox');
+    options.addArguments('--disable-dev-shm-usage');
     options.addArguments(`--user-data-dir=${userDataDir}`);
-    options.addArguments("--window-size=1920,1080");
-    options.addArguments("--remote-debugging-port=9222");
-    options.addArguments("--disable-blink-features=AutomationControlled");
-    console.log("Launch WebDriver...");
+    options.addArguments('--window-size=1920,1080');
+    options.addArguments('--remote-debugging-port=9222');
+    options.addArguments('--disable-blink-features=AutomationControlled');
+    console.log('Launch WebDriver...');
 
     try {
       driver = await new Builder()
-        .forBrowser("chrome")
+        .forBrowser('chrome')
         .setChromeOptions(options)
         .build();
-      console.log("WebDriver launched!");
+      console.log('WebDriver launched!');
     } catch (error) {
-      console.error("Failed to launch WebDriver:", error);
+      console.error('Failed to launch WebDriver:', error);
       console.error(error.stack);
       throw error;
     }
   });
-  it("should answer on quiz questions", async function () {
+  it('should answer on quiz questions', async function () {
     this.timeout(60000);
     const randomNumber = Math.floor(Math.random() * 100000);
     const email = `veronika.filipenko+${randomNumber}@cere.io`;
-    const otp = "555555";
+    const otp = '555555';
     await driver.get(
-      "https://telegram-viewer-app.stage.cere.io/?campaignId=120"
+      'https://telegram-viewer-app.stage.cere.io/?campaignId=120'
     );
 
-    await driver.wait(until.elementLocated(By.className("hero-title")), 10000);
+    await driver.wait(until.elementLocated(By.className('hero-title')), 10000);
     const welcomeTitle = await driver
-      .findElement(By.className("hero-title"))
+      .findElement(By.className('hero-title'))
       .getText();
-    expect(welcomeTitle).to.equal("Sit back, Enjoy, and Earn!");
+    expect(welcomeTitle).to.equal('Sit back, Enjoy, and Earn!');
 
-    await driver.findElement(By.className("tgui-bca5056bf34297b0")).click();
-    await driver.findElement(By.className("welcom-cta-text")).click();
+    await driver.findElement(By.className('tgui-bca5056bf34297b0')).click();
+    await driver.findElement(By.className('welcom-cta-text')).click();
 
-    await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
-    let torusFrame = await driver.findElement(By.id("torusIframe"));
+    await driver.wait(until.elementLocated(By.id('torusIframe')), 30000);
+    let torusFrame = await driver.findElement(By.id('torusIframe'));
     driver.switchTo().frame(torusFrame);
 
     let embeddedFrame = await driver.wait(
@@ -224,8 +224,8 @@ describe("Answer on quiz questions", async function () {
     );
     await buttonLogin.click();
 
-    await driver.wait(until.elementLocated(By.name("email")), 20000);
-    const emailInput = await driver.findElement(By.name("email"));
+    await driver.wait(until.elementLocated(By.name('email')), 20000);
+    const emailInput = await driver.findElement(By.name('email'));
     await emailInput.sendKeys(email);
 
     await driver.wait(
@@ -250,7 +250,7 @@ describe("Answer on quiz questions", async function () {
     let verifyButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Verify')]")
     );
-    await driver.executeScript("arguments[0].scrollIntoView();", verifyButton);
+    await driver.executeScript('arguments[0].scrollIntoView();', verifyButton);
     await driver.wait(until.elementIsVisible(verifyButton), 10000);
     await verifyButton.click();
 
@@ -262,7 +262,7 @@ describe("Answer on quiz questions", async function () {
     let continueButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Continue')]")
     );
-    await driver.executeScript("arguments[0].click();", continueButton);
+    await driver.executeScript('arguments[0].click();', continueButton);
     await driver.switchTo().defaultContent();
 
     await driver.wait(
@@ -284,7 +284,7 @@ describe("Answer on quiz questions", async function () {
       10000
     );
 
-    console.log("Test Answer on quiz questions passed");
+    console.log('Test Answer on quiz questions passed');
   });
 
   after(async function () {
@@ -299,52 +299,53 @@ describe("Answer on quiz questions", async function () {
   });
 });
 
-describe("Open leaderboard screen", async function () {
+describe('Open leaderboard screen', async function () {
   let driver;
   let userDataDir;
   before(async function () {
     this.timeout(60000);
-    console.log("Create folder...");
+    console.log('Create folder...');
     userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
-    console.log("Set up ChromeOptions...");
+    console.log('Set up ChromeOptions...');
 
     const options = new chrome.Options();
-    options.addArguments("--headless=new");
-    options.addArguments("--disable-gpu");
-    options.addArguments("--no-sandbox");
-    options.addArguments("--disable-dev-shm-usage");
+    options.addArguments('--headless=new');
+    options.addArguments('--disable-gpu');
+    options.addArguments('--no-sandbox');
+    options.addArguments('--disable-dev-shm-usage');
     options.addArguments(`--user-data-dir=${userDataDir}`);
-    options.addArguments("--window-size=1920,1080");
-    options.addArguments("--remote-debugging-port=9222");
-    options.addArguments("--disable-blink-features=AutomationControlled");
-    console.log("Launch WebDriver...");
+    options.addArguments('--window-size=1920,1080');
+    options.addArguments('--remote-debugging-port=9222');
+    options.addArguments('--disable-blink-features=AutomationControlled');
+    console.log('Launch WebDriver...');
 
     driver = await new Builder()
-      .forBrowser("chrome")
+      .forBrowser('chrome')
       .setChromeOptions(options)
       .build();
-    console.log("WebDriver launched!");
+    console.log('WebDriver launched!');
   });
-  it("should show leaderboard screen", async function () {
+  it('should show leaderboard screen', async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
     const email = `veronika.filipenko+${randomNumber}@cere.io`;
-    const otp = "555555";
+    const otp = '555555';
     await driver.get(
-      "https://telegram-viewer-app.stage.cere.io/?campaignId=120"
+      'https://telegram-viewer-app.stage.cere.io/?campaignId=120'
     );
 
-    await driver.wait(until.elementLocated(By.className("hero-title")), 10000);
+    this.timeout(60000);
+    await driver.wait(until.elementLocated(By.className('hero-title')), 10000);
     const welcomeTitle = await driver
-      .findElement(By.className("hero-title"))
+      .findElement(By.className('hero-title'))
       .getText();
-    expect(welcomeTitle).to.equal("Sit back, Enjoy, and Earn!");
+    expect(welcomeTitle).to.equal('Sit back, Enjoy, and Earn!');
 
-    await driver.findElement(By.className("tgui-bca5056bf34297b0")).click();
-    await driver.findElement(By.className("welcom-cta-text")).click();
+    await driver.findElement(By.className('tgui-bca5056bf34297b0')).click();
+    await driver.findElement(By.className('welcom-cta-text')).click();
 
-    await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
-    let torusFrame = await driver.findElement(By.id("torusIframe"));
+    await driver.wait(until.elementLocated(By.id('torusIframe')), 30000);
+    let torusFrame = await driver.findElement(By.id('torusIframe'));
     driver.switchTo().frame(torusFrame);
 
     let embeddedFrame = await driver.wait(
@@ -364,8 +365,8 @@ describe("Open leaderboard screen", async function () {
     );
     await buttonLogin.click();
 
-    await driver.wait(until.elementLocated(By.name("email")), 20000);
-    const emailInput = await driver.findElement(By.name("email"));
+    await driver.wait(until.elementLocated(By.name('email')), 20000);
+    const emailInput = await driver.findElement(By.name('email'));
     await emailInput.sendKeys(email);
 
     await driver.wait(
@@ -400,7 +401,7 @@ describe("Open leaderboard screen", async function () {
     let continueButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Continue')]")
     );
-    await driver.executeScript("arguments[0].click();", continueButton);
+    await driver.executeScript('arguments[0].click();', continueButton);
 
     await driver.switchTo().defaultContent();
 
@@ -410,7 +411,35 @@ describe("Open leaderboard screen", async function () {
     );
     await leaderboard.click();
 
-    console.log("Test Open leaderboard screen passed");
+    await driver.wait(
+      until.elementLocated(By.xpath("//iframe[@title='Leaderboard']")),
+      60000
+    );
+    let leaderboardIframe = await driver.findElement(
+      By.xpath("//iframe[@title='Leaderboard']")
+    );
+    driver.switchTo().frame(leaderboardIframe);
+
+    await driver.wait(
+      until.elementLocated(By.xpath("//div[contains(text(), 'Place')]")),
+      60000
+    );
+
+    await driver.findElement(By.xpath("//div[contains(text(), 'Users')]"));
+
+    await driver.findElement(By.xpath("//div[contains(text(), 'Points')]"));
+
+    let profileIcon = await driver.findElement(By.className('ug3n9qx'));
+    profileIcon.click();
+
+    await driver.wait(until.elementLocated(By.className('t1bxs9xw')), 60000);
+    const resultsText = await driver.findElement(By.className('p1kqqlhg'));
+    await driver.executeScript(
+      'arguments[0].scrollIntoView(true);',
+      resultsText
+    );
+
+    console.log('Test Open leaderboard screen passed');
   });
   after(async function () {
     await driver.quit();
@@ -424,52 +453,53 @@ describe("Open leaderboard screen", async function () {
   });
 });
 
-describe("Open library screen", async function () {
+describe('Open library screen', async function () {
   let driver;
   let userDataDir;
   before(async function () {
     this.timeout(60000);
-    console.log("Create folder...");
+    console.log('Create folder...');
     userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
-    console.log("Set up ChromeOptions...");
+    console.log('Set up ChromeOptions...');
 
     const options = new chrome.Options();
-    options.addArguments("--headless=new");
-    options.addArguments("--disable-gpu");
-    options.addArguments("--no-sandbox");
-    options.addArguments("--disable-dev-shm-usage");
+    options.addArguments('--headless=new');
+    options.addArguments('--disable-gpu');
+    options.addArguments('--no-sandbox');
+    options.addArguments('--disable-dev-shm-usage');
     options.addArguments(`--user-data-dir=${userDataDir}`);
-    options.addArguments("--window-size=1920,1080");
-    options.addArguments("--remote-debugging-port=9222");
-    options.addArguments("--disable-blink-features=AutomationControlled");
-    console.log("Launch WebDriver...");
+    options.addArguments('--window-size=1920,1080');
+    options.addArguments('--remote-debugging-port=9222');
+    options.addArguments('--disable-blink-features=AutomationControlled');
+    console.log('Launch WebDriver...');
 
     driver = await new Builder()
-      .forBrowser("chrome")
+      .forBrowser('chrome')
       .setChromeOptions(options)
       .build();
-    console.log("WebDriver launched!");
+    console.log('WebDriver launched!');
   });
-  it("should show library screen", async function () {
+  it('should show library screen', async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
     const email = `veronika.filipenko+${randomNumber}@cere.io`;
-    const otp = "555555";
+    const otp = '555555';
     await driver.get(
-      "https://telegram-viewer-app.stage.cere.io/?campaignId=120"
+      'https://telegram-viewer-app.stage.cere.io/?campaignId=120'
     );
 
-    await driver.wait(until.elementLocated(By.className("hero-title")), 10000);
+    this.timeout(60000);
+    await driver.wait(until.elementLocated(By.className('hero-title')), 10000);
     const welcomeTitle = await driver
-      .findElement(By.className("hero-title"))
+      .findElement(By.className('hero-title'))
       .getText();
-    expect(welcomeTitle).to.equal("Sit back, Enjoy, and Earn!");
+    expect(welcomeTitle).to.equal('Sit back, Enjoy, and Earn!');
 
-    await driver.findElement(By.className("tgui-bca5056bf34297b0")).click();
-    await driver.findElement(By.className("welcom-cta-text")).click();
+    await driver.findElement(By.className('tgui-bca5056bf34297b0')).click();
+    await driver.findElement(By.className('welcom-cta-text')).click();
 
-    await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
-    let torusFrame = await driver.findElement(By.id("torusIframe"));
+    await driver.wait(until.elementLocated(By.id('torusIframe')), 30000);
+    let torusFrame = await driver.findElement(By.id('torusIframe'));
     driver.switchTo().frame(torusFrame);
 
     let embeddedFrame = await driver.wait(
@@ -489,8 +519,8 @@ describe("Open library screen", async function () {
     );
     await buttonLogin.click();
 
-    await driver.wait(until.elementLocated(By.name("email")), 20000);
-    const emailInput = await driver.findElement(By.name("email"));
+    await driver.wait(until.elementLocated(By.name('email')), 20000);
+    const emailInput = await driver.findElement(By.name('email'));
     await emailInput.sendKeys(email);
 
     await driver.wait(
@@ -525,11 +555,26 @@ describe("Open library screen", async function () {
     let continueButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Continue')]")
     );
-    await driver.executeScript("arguments[0].click();", continueButton);
+    await driver.executeScript('arguments[0].click();', continueButton);
 
     await driver.switchTo().defaultContent();
 
-    console.log("Test Open library screen passed");
+    let library = await driver.wait(
+      until.elementLocated(By.xpath("//span[text()='Library']")),
+      10000
+    );
+    await library.click();
+
+    await driver.wait(
+      until.elementLocated(
+        By.xpath(
+          "//div[text()='Explore our growing collection of community videos and earn rewards for watching! Each video watched brings you closer to unlocking exclusive prizes!']"
+        )
+      ),
+      10000
+    );
+
+    console.log('Test Open library screen passed');
   });
   after(async function () {
     await driver.quit();
@@ -543,52 +588,53 @@ describe("Open library screen", async function () {
   });
 });
 
-describe("Open video", async function () {
+describe('Open video', async function () {
   let driver;
   let userDataDir;
   before(async function () {
     this.timeout(60000);
-    console.log("Create folder...");
+    console.log('Create folder...');
     userDataDir = path.join(__dirname, `chrome-profile-${Date.now()}`);
     fs.mkdirSync(userDataDir, { recursive: true });
-    console.log("Set up ChromeOptions...");
+    console.log('Set up ChromeOptions...');
 
     const options = new chrome.Options();
-    options.addArguments("--headless=new");
-    options.addArguments("--disable-gpu");
-    options.addArguments("--no-sandbox");
-    options.addArguments("--disable-dev-shm-usage");
+    options.addArguments('--headless=new');
+    options.addArguments('--disable-gpu');
+    options.addArguments('--no-sandbox');
+    options.addArguments('--disable-dev-shm-usage');
     options.addArguments(`--user-data-dir=${userDataDir}`);
-    options.addArguments("--window-size=1920,1080");
-    options.addArguments("--remote-debugging-port=9222");
-    options.addArguments("--disable-blink-features=AutomationControlled");
-    console.log("Launch WebDriver...");
+    options.addArguments('--window-size=1920,1080');
+    options.addArguments('--remote-debugging-port=9222');
+    options.addArguments('--disable-blink-features=AutomationControlled');
+    console.log('Launch WebDriver...');
 
     driver = await new Builder()
-      .forBrowser("chrome")
+      .forBrowser('chrome')
       .setChromeOptions(options)
       .build();
-    console.log("WebDriver launched!");
+    console.log('WebDriver launched!');
   });
-  it("should show video", async function () {
+  it('should show video', async function () {
     const randomNumber = Math.floor(Math.random() * 100000);
     const email = `veronika.filipenko+${randomNumber}@cere.io`;
-    const otp = "555555";
+    const otp = '555555';
     await driver.get(
-      "https://telegram-viewer-app.stage.cere.io/?campaignId=120"
+      'https://telegram-viewer-app.stage.cere.io/?campaignId=120'
     );
 
-    await driver.wait(until.elementLocated(By.className("hero-title")), 10000);
+    this.timeout(60000);
+    await driver.wait(until.elementLocated(By.className('hero-title')), 10000);
     const welcomeTitle = await driver
-      .findElement(By.className("hero-title"))
+      .findElement(By.className('hero-title'))
       .getText();
-    expect(welcomeTitle).to.equal("Sit back, Enjoy, and Earn!");
+    expect(welcomeTitle).to.equal('Sit back, Enjoy, and Earn!');
 
-    await driver.findElement(By.className("tgui-bca5056bf34297b0")).click();
-    await driver.findElement(By.className("welcom-cta-text")).click();
+    await driver.findElement(By.className('tgui-bca5056bf34297b0')).click();
+    await driver.findElement(By.className('welcom-cta-text')).click();
 
-    await driver.wait(until.elementLocated(By.id("torusIframe")), 30000);
-    let torusFrame = await driver.findElement(By.id("torusIframe"));
+    await driver.wait(until.elementLocated(By.id('torusIframe')), 30000);
+    let torusFrame = await driver.findElement(By.id('torusIframe'));
     driver.switchTo().frame(torusFrame);
 
     let embeddedFrame = await driver.wait(
@@ -608,8 +654,8 @@ describe("Open video", async function () {
     );
     await buttonLogin.click();
 
-    await driver.wait(until.elementLocated(By.name("email")), 20000);
-    const emailInput = await driver.findElement(By.name("email"));
+    await driver.wait(until.elementLocated(By.name('email')), 20000);
+    const emailInput = await driver.findElement(By.name('email'));
     await emailInput.sendKeys(email);
 
     await driver.wait(
@@ -644,11 +690,36 @@ describe("Open video", async function () {
     let continueButton = await driver.findElement(
       By.xpath("//button[contains(text(), 'Continue')]")
     );
-    await driver.executeScript("arguments[0].click();", continueButton);
+    await driver.executeScript('arguments[0].click();', continueButton);
 
     await driver.switchTo().defaultContent();
 
-    console.log("Test Open library screen passed");
+    let library = await driver.wait(
+      until.elementLocated(By.xpath("//span[text()='Library']")),
+      10000
+    );
+    await library.click();
+
+    await driver.wait(
+      until.elementLocated(
+        By.xpath(
+          "//div[text()='Explore our growing collection of community videos and earn rewards for watching! Each video watched brings you closer to unlocking exclusive prizes!']"
+        )
+      ),
+      10000
+    );
+
+    let firstVideo = await driver.findElement(
+      By.xpath("//span[contains(text(), 'first video')]")
+    );
+    await firstVideo.click();
+
+    await driver.wait(
+      until.elementLocated(By.xpath("//h5[text()='🎉 Congratulations!']")),
+      60000
+    );
+
+    console.log('Test Open library screen passed');
   });
   after(async function () {
     await driver.quit();
