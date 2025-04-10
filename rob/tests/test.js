@@ -11,7 +11,7 @@ console.log('Use chromedriver:', chromedriverPath);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-describe.only('Create new campaign', async function () {
+describe('Create new campaign', async function () {
   let driver;
   let userDataDir;
   before(async function () {
@@ -22,7 +22,7 @@ describe.only('Create new campaign', async function () {
     console.log('Set up ChromeOptions...');
 
     const options = new chrome.Options();
-    // options.addArguments("--headless=new");
+    options.addArguments('--headless=new');
     options.addArguments('--disable-gpu');
     options.addArguments('--no-sandbox');
     options.addArguments('--disable-dev-shm-usage');
