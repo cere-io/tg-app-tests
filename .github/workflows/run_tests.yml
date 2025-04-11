@@ -7,7 +7,7 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    - cron: "0 0 * * *" # daily 00:00 UTC
+    - cron: '0 0 * * *' # daily 00:00 UTC
 
 jobs:
   test:
@@ -44,16 +44,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests with Mocha + Allure
+      - name: Run tests and generate HTML report
         env:
           CI: true
-        run: |
-          mkdir -p allure-results
-          npm test -- --exit || true
+        run: npm test || true
 
-      - name: Upload Allure Results
+      - name: Upload HTML Test Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-results
-          path: allure-results/
+          name: html-test-report
+          path: reports/report.html

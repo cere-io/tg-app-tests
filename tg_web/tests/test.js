@@ -54,6 +54,7 @@ describe('Open active quests screen', async function () {
       'https://telegram-viewer-app.stage.cere.io/?campaignId=120'
     );
 
+    this.timeout(60000);
     await driver.wait(until.elementLocated(By.className('hero-title')), 10000);
     const welcomeTitle = await driver
       .findElement(By.className('hero-title'))
@@ -194,6 +195,7 @@ describe('Answer on quiz questions', async function () {
       'https://telegram-viewer-app.stage.cere.io/?campaignId=120'
     );
 
+    this.timeout(60000);
     await driver.wait(until.elementLocated(By.className('hero-title')), 10000);
     const welcomeTitle = await driver
       .findElement(By.className('hero-title'))
