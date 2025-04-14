@@ -388,49 +388,6 @@ describe('Create new template', async function () {
     await addNew.click();
 
     const templateName = 'Autotests template';
-    const htmlRaw = `<!DOCTYPE html>
-    <html lang="en"><head><meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-  <meta
-      name="description"
-      content="Web site created using create-react-app"
-  />
-<script>
-  var TEMPLATE_DATA = JSON.stringify({ quests: {{{json data.0.quests}}}, campaignId: "{{data.0.campaignId}}", accountId: "{{data.0.accountId}}", theme: "{{data.0.theme}}", templateTitle: "Complete Quests to Earn!", campaignDescription: "{{data.0.campaignDescription}}", remainingTime: {{{json data.0.remainingTime}}}, campaignName: "{{data.0.campaignName}}", startDate: "{{data.0.startDate}}", endDate: "{{data.0.endDate}}" });
-  </script>
-  
-  <style>
-    body { background: transparent; }
-    html::-webkit-scrollbar {
-      display: none;
-    }
-    #active_quests_v2 {
-            background: linear-gradient(135deg, #0EDD8D 0%, #15F6CB 100%);
-            padding: 20px;
-            min-height: 100vh;
-        }
-        #active_quests_v2 h1,
-        #active_quests_v2 h2,
-        #active_quests_v2 h3,
-        #active_quests_v2 h4,
-        #active_quests_v2 h5,
-        #active_quests_v2 h6 {
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-  </style>
-  <title>Active quests</title>
-</head>
-<body>
-<div id="active_quests_v2"></div>
-
-  
-<script src="https://rxb.components.stage.cere.io/v2.32.0/static/js/bundle.js"></script>
-<link rel="stylesheet" href="https://rxb.components.stage.cere.io/v2.32.0/static/css/bundle.css" />
-</body>
-</html>`;
-
     await driver.wait(until.elementLocated(By.name('name')), 10000);
     let nameField = await driver.findElement(By.name('name'));
     await nameField.sendKeys(templateName);
@@ -450,6 +407,15 @@ describe('Create new template', async function () {
       ),
       10000
     );
+
+    let deleteButton = await driver.findElement(
+      By.xpath(
+        '//tr[td[contains(text(),"Autotests template")]]//span[contains(text(),"Delete")]'
+      )
+    );
+    await deleteButton.click();
+
+    await driver.switchTo().alert().accept();
 
     console.log('Test Create new template passed');
   });
@@ -522,6 +488,15 @@ describe('Create new event trigger', async function () {
     await driver.findElement(By.id('placement_name')).sendKeys(eventName);
     await driver.findElement(By.id('app_id')).sendKeys('Veronicas test app');
     await driver.findElement(By.id('submit')).click();
+
+    await driver.wait(
+      until.elementLocated(
+        By.xpath("//td[contains(text(), 'autotests_trigger')]")
+      ),
+      10000
+    );
+
+    await driver.findElement(By.id('placementDeleteButton')).click();
 
     console.log('Test Create new event trigger passed');
   });
