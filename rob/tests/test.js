@@ -512,7 +512,7 @@ describe('Create new event trigger', async function () {
   });
 });
 
-describe.only('Create new engagement', async function () {
+describe('Create new engagement', async function () {
   let driver;
   let userDataDir;
   before(async function () {
@@ -523,7 +523,7 @@ describe.only('Create new engagement', async function () {
     console.log('Set up ChromeOptions...');
 
     const options = new chrome.Options();
-    // options.addArguments('--headless=new');
+    options.addArguments('--headless=new');
     options.addArguments('--disable-gpu');
     options.addArguments('--no-sandbox');
     options.addArguments('--disable-dev-shm-usage');
