@@ -566,12 +566,6 @@ describe('Create new engagement', async function () {
       until.elementLocated(By.xpath("//h3[text()='Engagement settings']")),
       50000
     );
-    const engagementName = 'autotests engagement';
-
-    const nameInput = await driver.findElement(
-      By.xpath('//input[@name="name" and @type="text"]')
-    );
-    await nameInput.sendKeys(engagementName);
     await driver.findElement(By.id('mui-component-select-campaign')).click();
     await driver.wait(
       until.elementLocated(
@@ -601,6 +595,7 @@ describe('Create new engagement', async function () {
       )
     );
     await testApp.click();
+    await driver.findElement(By.css('body')).click();
 
     await driver.wait(
       until.elementLocated(By.id('mui-component-select-template')),
@@ -614,7 +609,64 @@ describe('Create new engagement', async function () {
     );
     await testTemplate.click();
 
+    const engagementName = 'autotests engagement';
+    const nameInput = await driver.findElement(
+      By.xpath('//input[@name="name" and @type="text"]')
+    );
+    await nameInput.sendKeys(engagementName);
+    this.timeout(10000);
     await driver.findElement(By.name('enabled')).click();
+    let nextButton = await driver.findElement(
+      By.xpath("//span[text()='Next']")
+    );
+    await driver.executeScript('arguments[0].click();', nextButton);
+
+    await driver.wait(
+      until.elementLocated(By.xpath("//span[text()='Add new']")),
+      10000
+    );
+
+    let addTrigger = await driver.findElement(
+      By.xpath("//span[text()='Add new']")
+    );
+    await driver.executeScript('arguments[0].click();', addTrigger);
+    await driver.wait(
+      until.elementLocated(By.xpath("//h4[text()='Define event triggers']")),
+      20000
+    );
+    await driver
+      .findElement(By.id('mui-component-select-eventTrigger'))
+      .click();
+    const testTrigger = await driver.findElement(
+      By.xpath(
+        '//li[contains(@class, "MuiMenuItem-root") and normalize-space(.)="GET_LEADERBOARD"]'
+      )
+    );
+    await testTrigger.click();
+    await driver.findElement(By.xpath("//span[text()='Save changes']")).click();
+    await driver.wait(
+      until.elementLocated(By.xpath("//span[text()='Next']")),
+      10000
+    );
+    await driver.executeScript('arguments[0].click();', nextButton);
+
+    await driver.wait(
+      until.elementLocated(By.xpath("//span[text()='Configure']")),
+      10000
+    );
+    await driver.wait(until.elementLocated(By.xpath("//p[text()='0']")), 1000);
+    let addTargeting = await driver.findElement(
+      By.xpath("//span[text()='Configure']")
+    );
+    await driver.executeScript('arguments[0].click();', addTargeting);
+    await driver.wait(
+      until.elementLocated(By.xpath("//h4[text()='Rules Editor']")),
+      10000
+    );
+    await driver.wait(
+      until.elementLocated(By.xpath("//h6[text()='Engagement Targeting']")),
+      10000
+    );
 
     console.log('Test Create new engagement passed');
   });
