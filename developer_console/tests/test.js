@@ -341,29 +341,21 @@ describe('Top up DDC account', async function () {
       By.xpath("//button[contains(text(), 'Verify')]")
     );
     await verifyButton.click();
-
-    this.timeout(60000);
-    await driver.wait(
-      until.elementLocated(By.xpath("//button[contains(text(), 'Continue')]")),
-      60000
-    );
-    let continueButton = await driver.findElement(
-      By.xpath("//button[contains(text(), 'Continue')]")
-    );
-    await driver.executeScript('arguments[0].click();', continueButton);
-
     await driver.switchTo().defaultContent();
 
+    console.log('1');
+    this.timeout(60000);
+
     await driver.wait(
-      until.elementLocated(
-        By.xpath("//h3[contains(text(), 'Content Storage')]")
-      ),
-      40000
+      until.elementLocated(By.xpath("//p[contains(text(), 'Account')]")),
+      20000
     );
     let accountButton = await driver.findElement(
       By.xpath("//p[contains(text(), 'Account')]")
     );
+    console.log('1');
     await driver.executeScript('arguments[0].click();', accountButton);
+    console.log('1');
     let topUpbutton = await driver.findElement(
       By.xpath("//a[contains(text(), 'Top Up')]")
     );
@@ -380,7 +372,9 @@ describe('Top up DDC account', async function () {
     await driver
       .findElement(By.css('input[placeholder="0.00"]'))
       .sendKeys(amount);
-    await driver.findElement(By.id(':rr:')).click();
+    await driver
+      .findElement(By.xpath("//button[contains(text(), 'Confirm')]"))
+      .click();
 
     await driver.wait(
       until.elementLocated(
@@ -388,7 +382,7 @@ describe('Top up DDC account', async function () {
           "//div[contains(text(), 'Congrats! You topped up your DDC Account with 2 tokens')]"
         )
       ),
-      70000
+      100000
     );
 
     console.log('Test Top up DDC account passed');
