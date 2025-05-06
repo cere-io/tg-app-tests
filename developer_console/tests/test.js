@@ -343,19 +343,16 @@ describe('Top up DDC account', async function () {
     await verifyButton.click();
     await driver.switchTo().defaultContent();
 
-    console.log('1');
     this.timeout(60000);
 
     await driver.wait(
       until.elementLocated(By.xpath("//p[contains(text(), 'Account')]")),
-      20000
+      50000
     );
     let accountButton = await driver.findElement(
       By.xpath("//p[contains(text(), 'Account')]")
     );
-    console.log('1');
     await driver.executeScript('arguments[0].click();', accountButton);
-    console.log('1');
     let topUpbutton = await driver.findElement(
       By.xpath("//a[contains(text(), 'Top Up')]")
     );

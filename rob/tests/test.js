@@ -11,7 +11,7 @@ console.log('Use chromedriver:', chromedriverPath);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-describe('Create new campaign', async function () {
+describe('Create new campaign old version', async function () {
   let driver;
   let userDataDir;
   before(async function () {
@@ -59,7 +59,22 @@ describe('Create new campaign', async function () {
       .getText();
     expect(welcomeMessage).to.equal(`Hello ${userName}`);
 
-    await driver.findElement(By.id('menu-campaign')).click();
+    const campaignsMenu = await driver.wait(
+      until.elementLocated(By.css('#menu-campaign > a')),
+      10000
+    );
+
+    const actions = driver.actions({ async: true });
+    await actions.move({ origin: campaignsMenu }).perform();
+
+    const campaignsOld = await driver.wait(
+      until.elementLocated(
+        By.css('a[href*="controller=campaign&action=index"]')
+      ),
+      5000
+    );
+    await campaignsOld.click();
+
     await driver.findElement(By.id('create-campaign')).click();
 
     const randomNumber = Math.floor(Math.random() * 100000);
