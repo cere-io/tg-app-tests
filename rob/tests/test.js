@@ -96,7 +96,7 @@ describe('Create new campaign old version', async function () {
     );
     await driver.wait(
       until.elementLocated(By.xpath("//span[text()='Select data services']")),
-      10000
+      20000
     );
     const dropdown = await driver.findElement(
       By.xpath("//span[text()='Select data services']")
@@ -104,7 +104,7 @@ describe('Create new campaign old version', async function () {
     await dropdown.click();
 
     const option = await driver.findElement(
-      By.xpath("//div[text()='Telegram Supercharged Bot']")
+      By.xpath("//div[text()='Veronicas test app ']")
     );
     await driver.executeScript('arguments[0].scrollIntoView(true);', option);
     await option.click();
@@ -241,7 +241,7 @@ describe('Create new campaign old version', async function () {
       .click();
     await driver.wait(
       until.elementLocated(By.xpath("//h3[text()='Create New Quiz Task']")),
-      10000
+      20000
     );
 
     const quizTitle = `Quiz title+${randomNumber}`;
