@@ -314,6 +314,7 @@ describe('Load data for wallet witout data', async function () {
     const otp = '555555';
     await driver.get('https://ddc.stage.cere.network/#/');
 
+    await driver.wait(until.elementLocated(By.className('nvg2rd8')), 30000);
     await driver.findElement(By.className('nvg2rd8')).click();
 
     await driver.wait(until.elementLocated(By.id('torusIframe')), 30000);
