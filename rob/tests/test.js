@@ -527,7 +527,7 @@ describe('Create new event trigger', async function () {
   });
 });
 
-describe('Create new engagement', async function () {
+describe('Create new engagement old version', async function () {
   let driver;
   let userDataDir;
   before(async function () {
@@ -574,7 +574,21 @@ describe('Create new engagement', async function () {
       .getText();
     expect(welcomeMessage).to.equal(`Hello ${userName}`);
 
-    await driver.findElement(By.id('menu-engagement')).click();
+    const engagementsMenu = await driver.wait(
+      until.elementLocated(By.css('#menu-engagement > a')),
+      10000
+    );
+
+    const actions = driver.actions({ async: true });
+    await actions.move({ origin: engagementsMenu }).perform();
+
+    const engagementsOld = await driver.wait(
+      until.elementLocated(
+        By.css('a[href*="controller=engagement&action=index"]')
+      ),
+      5000
+    );
+    await engagementsOld.click();
     await driver.findElement(By.className('button_left')).click();
 
     await driver.wait(
