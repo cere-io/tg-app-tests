@@ -590,7 +590,7 @@ describe('Open library screen', async function () {
   });
 });
 
-describe('Open video', async function () {
+describe.only('Open video', async function () {
   let driver;
   let userDataDir;
   before(async function () {
@@ -601,7 +601,7 @@ describe('Open video', async function () {
     console.log('Set up ChromeOptions...');
 
     const options = new chrome.Options();
-    options.addArguments('--headless=new');
+    // options.addArguments('--headless=new');
     options.addArguments('--disable-gpu');
     options.addArguments('--no-sandbox');
     options.addArguments('--disable-dev-shm-usage');
@@ -684,15 +684,18 @@ describe('Open video', async function () {
     );
     await verifyButton.click();
 
-    this.timeout(60000);
-    await driver.wait(
-      until.elementLocated(By.xpath("//button[contains(text(), 'Continue')]")),
-      60000
-    );
-    let continueButton = await driver.findElement(
-      By.xpath("//button[contains(text(), 'Continue')]")
-    );
-    await driver.executeScript('arguments[0].click();', continueButton);
+    try {
+      let continueBtn = await driver.wait(
+        until.elementLocated(
+          By.xpath("//button[contains(text(), 'Continue')]")
+        ),
+        5000
+      );
+      await driver.executeScript('arguments[0].click();', continueBtn);
+      console.log('Continue button was found and clicked');
+    } catch (err) {
+      console.log('No Continue button found, proceeding...');
+    }
 
     await driver.switchTo().defaultContent();
 

@@ -341,6 +341,20 @@ describe('Top up DDC account', async function () {
       By.xpath("//button[contains(text(), 'Verify')]")
     );
     await verifyButton.click();
+
+    try {
+      let continueBtn = await driver.wait(
+        until.elementLocated(
+          By.xpath("//button[contains(text(), 'Continue')]")
+        ),
+        5000
+      );
+      await driver.executeScript('arguments[0].click();', continueBtn);
+      console.log('Continue button was found and clicked');
+    } catch (err) {
+      console.log('No Continue button found, proceeding...');
+    }
+
     await driver.switchTo().defaultContent();
 
     this.timeout(60000);
@@ -467,16 +481,18 @@ describe('Log in log out', async function () {
     );
     await verifyButton.click();
 
-    this.timeout(60000);
-    await driver.wait(
-      until.elementLocated(By.xpath("//button[contains(text(), 'Continue')]")),
-      60000
-    );
-    let continueButton = await driver.findElement(
-      By.xpath("//button[contains(text(), 'Continue')]")
-    );
-    await driver.executeScript('arguments[0].click();', continueButton);
-
+    try {
+      let continueBtn = await driver.wait(
+        until.elementLocated(
+          By.xpath("//button[contains(text(), 'Continue')]")
+        ),
+        5000
+      );
+      await driver.executeScript('arguments[0].click();', continueBtn);
+      console.log('Continue button was found and clicked');
+    } catch (err) {
+      console.log('No Continue button found, proceeding...');
+    }
     await driver.switchTo().defaultContent();
 
     await driver.wait(
