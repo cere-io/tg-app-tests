@@ -590,7 +590,7 @@ describe('Open library screen', async function () {
   });
 });
 
-describe.only('Open video', async function () {
+describe('Open video', async function () {
   let driver;
   let userDataDir;
   before(async function () {
@@ -601,7 +601,7 @@ describe.only('Open video', async function () {
     console.log('Set up ChromeOptions...');
 
     const options = new chrome.Options();
-    // options.addArguments('--headless=new');
+    options.addArguments('--headless=new');
     options.addArguments('--disable-gpu');
     options.addArguments('--no-sandbox');
     options.addArguments('--disable-dev-shm-usage');
