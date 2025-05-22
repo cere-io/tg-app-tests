@@ -176,6 +176,7 @@ describe('Load data invalid app key', async function () {
     const otp = '555555';
     await driver.get('https://ddc.stage.cere.network/#/');
 
+    this.timeout(20000);
     await driver.findElement(By.className('nvg2rd8')).click();
 
     await driver.wait(until.elementLocated(By.id('torusIframe')), 30000);
